@@ -10,13 +10,14 @@ test.describe('US2: View project details', () => {
 
   test('project detail page renders title, description, badge, tech stack, role and period', async ({ page }) => {
     await page.goto('/projects/example-startup/');
-    await expect(page.getByRole('heading', { level: 1, name: 'Realtime Analytics Platform' })).toBeVisible();
-    await expect(page.getByText('Co-founded a startup', { exact: false })).toBeVisible();
-    await expect(page.getByText('Startup', { exact: true }).first()).toBeVisible();
-    await expect(page.getByText('Co-founder & CTO')).toBeVisible();
-    await expect(page.getByText('2021-06')).toBeVisible();
+    const main = page.getByRole('main');
+    await expect(main.getByRole('heading', { level: 1, name: 'Realtime Analytics Platform' })).toBeVisible();
+    await expect(main.getByText('Co-founded a startup', { exact: false })).toBeVisible();
+    await expect(main.getByText('Startup', { exact: true }).first()).toBeVisible();
+    await expect(main.getByText('Co-founder & CTO')).toBeVisible();
+    await expect(main.getByText('2021-06', { exact: false }).first()).toBeVisible();
     for (const tech of ['Go', 'ClickHouse', 'React']) {
-      await expect(page.getByText(tech, { exact: true }).first()).toBeVisible();
+      await expect(main.getByText(tech, { exact: true }).first()).toBeVisible();
     }
   });
 
