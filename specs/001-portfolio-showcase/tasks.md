@@ -33,15 +33,15 @@ description: "Dependency-ordered task list for the Portfolio Showcase Site featu
 
 **Purpose**: Initialize the Astro project, install dependencies, and wire up tooling.
 
-- [ ] T001 Initialize `package.json` at repo root with Node 20 engine, scripts (`dev`, `build`, `preview`, `typecheck`, `lint`, `test`, `test:e2e`, `lighthouse`), and dependencies (`astro@^5`, `@astrojs/tailwind`, `@astrojs/sitemap`, `tailwindcss@^4`, `typescript`, `zod`)
-- [ ] T002 [P] Add `.nvmrc` containing `20` at repo root
-- [ ] T003 [P] Add `.gitignore` entries: `node_modules/`, `dist/`, `.astro/`, `coverage/`, `playwright-report/`, `test-results/`, `.lighthouseci/`
-- [ ] T004 [P] Create `tsconfig.json` extending `astro/tsconfigs/strict` with `paths` for `@/*` → `src/*`
-- [ ] T005 [P] Create `astro.config.mjs` with `site`, `base`, `integrations: [tailwind(), sitemap()]`, `output: 'static'`, image service config
-- [ ] T006 [P] Create `tailwind.config.ts` with design tokens (color palette meeting WCAG AA contrast, typography scale, spacing, breakpoints `sm:640 md:768 lg:1024 xl:1280`)
-- [ ] T007 [P] Add ESLint + Prettier configs (`.eslintrc.cjs`, `.prettierrc`) with Astro plugin
-- [ ] T008 [P] Install dev dependencies: `vitest`, `@vitest/ui`, `@playwright/test`, `@axe-core/playwright`, `@lhci/cli`, `eslint`, `eslint-plugin-astro`, `prettier`, `prettier-plugin-astro`
-- [ ] T009 Run `npx playwright install --with-deps chromium` and document in README
+- [X] T001 Initialize `package.json` at repo root with Node 20 engine, scripts (`dev`, `build`, `preview`, `typecheck`, `lint`, `test`, `test:e2e`, `lighthouse`), and dependencies (`astro@^5`, `@astrojs/tailwind`, `@astrojs/sitemap`, `tailwindcss@^4`, `typescript`, `zod`)
+- [X] T002 [P] Add `.nvmrc` containing `20` at repo root
+- [X] T003 [P] Add `.gitignore` entries: `node_modules/`, `dist/`, `.astro/`, `coverage/`, `playwright-report/`, `test-results/`, `.lighthouseci/`
+- [X] T004 [P] Create `tsconfig.json` extending `astro/tsconfigs/strict` with `paths` for `@/*` → `src/*`
+- [X] T005 [P] Create `astro.config.mjs` with `site`, `base`, `integrations: [tailwind(), sitemap()]`, `output: 'static'`, image service config
+- [X] T006 [P] Create `tailwind.config.ts` with design tokens (color palette meeting WCAG AA contrast, typography scale, spacing, breakpoints `sm:640 md:768 lg:1024 xl:1280`)
+- [X] T007 [P] Add ESLint + Prettier configs (`.eslintrc.cjs`, `.prettierrc`) with Astro plugin
+- [X] T008 [P] Install dev dependencies: `vitest`, `@vitest/ui`, `@playwright/test`, `@axe-core/playwright`, `@lhci/cli`, `eslint`, `eslint-plugin-astro`, `prettier`, `prettier-plugin-astro`
+- [X] T009 Run `npx playwright install --with-deps chromium` and document in README
 
 ---
 
@@ -51,17 +51,17 @@ description: "Dependency-ordered task list for the Portfolio Showcase Site featu
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T010 Create Zod schemas and three content collections in `src/content/config.ts` per data-model.md (Project schema with all required + optional fields, three collections: `personal`, `startup`, `corporate`)
-- [ ] T011 [P] Create slug helpers and global collision detector in `src/lib/slug.ts` (kebab-case validator, `assertNoCollisions(allProjects)` that throws on duplicates)
-- [ ] T012 [P] Create project query helpers in `src/lib/projects.ts` (`getAllProjects()`, `getByCategory(cat)`, `getFeatured()`, `sortProjects()` by `order` asc + `period.start` desc, `excludeDrafts(env)`)
-- [ ] T013 [P] Create image-path validator in `src/lib/assets.ts` (`assertImageExists(path)` checked at build time for `thumbnail` and `screenshots[]`)
-- [ ] T014 Create build-time integration in `src/integrations/content-validator.ts` that runs slug collision + image existence checks during `astro:build:setup`, registered in `astro.config.mjs`
-- [ ] T015 [P] Create global styles in `src/styles/global.css` (CSS reset, base typography, focus-visible styles, `prefers-reduced-motion` overrides, font-face declarations)
-- [ ] T016 [P] Add subset self-hosted woff2 fonts to `public/fonts/` (one display + one body family) with appropriate licensing notice in `public/fonts/LICENSE.txt`
-- [ ] T017 Create `src/layouts/BaseLayout.astro` (HTML5 doctype, `<html lang>`, meta tags slot, skip-to-content link, semantic `<header>`/`<main>`/`<footer>`, theme-color meta, Open Graph defaults)
-- [ ] T018 [P] Create `src/components/SiteHeader.astro` (logo/name, primary nav with category links, semantic `<nav>`, keyboard-accessible)
-- [ ] T019 [P] Create `src/components/SiteFooter.astro` (copyright, social/contact links, semantic `<footer>`)
-- [ ] T020 [P] Seed one example project per category for development: `src/content/projects/personal/example-personal.md`, `src/content/projects/startup/example-startup.md`, `src/content/projects/corporate/example-corporate.md` (all conforming to schema, with placeholder thumbnails in `public/projects/<slug>/`)
+- [X] T010 Create Zod schemas and three content collections in `src/content/config.ts` per data-model.md (Project schema with all required + optional fields, three collections: `personal`, `startup`, `corporate`)
+- [X] T011 [P] Create slug helpers and global collision detector in `src/lib/slug.ts` (kebab-case validator, `assertNoCollisions(allProjects)` that throws on duplicates)
+- [X] T012 [P] Create project query helpers in `src/lib/projects.ts` (`getAllProjects()`, `getByCategory(cat)`, `getFeatured()`, `sortProjects()` by `order` asc + `period.start` desc, `excludeDrafts(env)`)
+- [X] T013 [P] Create image-path validator in `src/lib/assets.ts` (`assertImageExists(path)` checked at build time for `thumbnail` and `screenshots[]`)
+- [X] T014 Create build-time integration in `src/integrations/content-validator.ts` that runs slug collision + image existence checks during `astro:build:setup`, registered in `astro.config.mjs`
+- [X] T015 [P] Create global styles in `src/styles/global.css` (CSS reset, base typography, focus-visible styles, `prefers-reduced-motion` overrides, font-face declarations)
+- [X] T016 [P] Add subset self-hosted woff2 fonts to `public/fonts/` (one display + one body family) with appropriate licensing notice in `public/fonts/LICENSE.txt`
+- [X] T017 Create `src/layouts/BaseLayout.astro` (HTML5 doctype, `<html lang>`, meta tags slot, skip-to-content link, semantic `<header>`/`<main>`/`<footer>`, theme-color meta, Open Graph defaults)
+- [X] T018 [P] Create `src/components/SiteHeader.astro` (logo/name, primary nav with category links, semantic `<nav>`, keyboard-accessible)
+- [X] T019 [P] Create `src/components/SiteFooter.astro` (copyright, social/contact links, semantic `<footer>`)
+- [X] T020 [P] Seed one example project per category for development: `src/content/projects/personal/example-personal.md`, `src/content/projects/startup/example-startup.md`, `src/content/projects/corporate/example-corporate.md` (all conforming to schema, with placeholder thumbnails in `public/projects/<slug>/`)
 
 **Checkpoint**: `npm run dev` starts without errors, content collections type-check, base layout renders an empty page with header/footer.
 
@@ -75,19 +75,19 @@ description: "Dependency-ordered task list for the Portfolio Showcase Site featu
 
 ### Tests for User Story 1
 
-- [ ] T021 [P] [US1] Vitest unit tests for query helpers in `tests/unit/projects.test.ts` (sorting by order/period, featured filter, drafts excluded in prod)
-- [ ] T022 [P] [US1] Playwright e2e for landing + category navigation in `tests/e2e/navigation.spec.ts` (covers spec AS-1, AS-2, AS-3, AS-4 of US1)
-- [ ] T023 [P] [US1] Playwright + axe-core a11y scan for landing and category pages in `tests/e2e/a11y.spec.ts` (zero serious/critical violations)
+- [X] T021 [P] [US1] Vitest unit tests for query helpers in `tests/unit/projects.test.ts` (sorting by order/period, featured filter, drafts excluded in prod)
+- [X] T022 [P] [US1] Playwright e2e for landing + category navigation in `tests/e2e/navigation.spec.ts` (covers spec AS-1, AS-2, AS-3, AS-4 of US1)
+- [X] T023 [P] [US1] Playwright + axe-core a11y scan for landing and category pages in `tests/e2e/a11y.spec.ts` (zero serious/critical violations)
 
 ### Implementation for User Story 1
 
-- [ ] T024 [P] [US1] Create `src/components/CategoryBadge.astro` (label + category-specific accent color from tokens)
-- [ ] T025 [P] [US1] Create `src/components/CategoryNav.astro` (three category links + "All" link, active-state highlighting via `Astro.url.pathname`)
-- [ ] T026 [P] [US1] Create `src/components/Hero.astro` (heading, intro copy, primary CTA to featured projects)
-- [ ] T027 [US1] Create `src/components/ProjectCard.astro` (uses `astro:assets` `<Image>` with `widths` for srcset, lazy loading, category badge, title, description, tech stack chips; entire card is a single `<a>` for keyboard nav) — depends on T024
-- [ ] T028 [US1] Create `src/components/ProjectGrid.astro` (CSS grid: 1 col < 640px, 2 cols 640–1023px, 3 cols ≥ 1024px; empty-state slot fallback) — depends on T027
-- [ ] T029 [US1] Create landing page `src/pages/index.astro` (BaseLayout + Hero + featured ProjectGrid + CategoryNav) — depends on T012, T017, T025, T026, T028
-- [ ] T030 [US1] Create category listing page `src/pages/category/[category].astro` with `getStaticPaths` returning the three category slugs; renders ProjectGrid filtered by category with empty-state message — depends on T012, T017, T028
+- [X] T024 [P] [US1] Create `src/components/CategoryBadge.astro` (label + category-specific accent color from tokens)
+- [X] T025 [P] [US1] Create `src/components/CategoryNav.astro` (three category links + "All" link, active-state highlighting via `Astro.url.pathname`)
+- [X] T026 [P] [US1] Create `src/components/Hero.astro` (heading, intro copy, primary CTA to featured projects)
+- [X] T027 [US1] Create `src/components/ProjectCard.astro` (uses `astro:assets` `<Image>` with `widths` for srcset, lazy loading, category badge, title, description, tech stack chips; entire card is a single `<a>` for keyboard nav) — depends on T024
+- [X] T028 [US1] Create `src/components/ProjectGrid.astro` (CSS grid: 1 col < 640px, 2 cols 640–1023px, 3 cols ≥ 1024px; empty-state slot fallback) — depends on T027
+- [X] T029 [US1] Create landing page `src/pages/index.astro` (BaseLayout + Hero + featured ProjectGrid + CategoryNav) — depends on T012, T017, T025, T026, T028
+- [X] T030 [US1] Create category listing page `src/pages/category/[category].astro` with `getStaticPaths` returning the three category slugs; renders ProjectGrid filtered by category with empty-state message — depends on T012, T017, T028
 
 **Checkpoint**: User Story 1 is fully functional. The MVP is shippable: visitors can browse and filter, even before detail pages exist.
 
@@ -101,16 +101,16 @@ description: "Dependency-ordered task list for the Portfolio Showcase Site featu
 
 ### Tests for User Story 2
 
-- [ ] T031 [P] [US2] Playwright e2e for project detail page in `tests/e2e/project-detail.spec.ts` (covers AS-1, AS-2, AS-3 of US2 — including the "no live link" graceful omission)
-- [ ] T032 [P] [US2] Extend `tests/e2e/a11y.spec.ts` to scan a project detail page
+- [X] T031 [P] [US2] Playwright e2e for project detail page in `tests/e2e/project-detail.spec.ts` (covers AS-1, AS-2, AS-3 of US2 — including the "no live link" graceful omission)
+- [X] T032 [P] [US2] Extend `tests/e2e/a11y.spec.ts` to scan a project detail page
 
 ### Implementation for User Story 2
 
-- [ ] T033 [P] [US2] Create `src/components/TechStack.astro` (renders chips for each `techStack` entry, semantic `<ul>`)
-- [ ] T034 [P] [US2] Create `src/components/ProjectLinks.astro` (conditionally renders source/live/case-study links, each as a real `<a>` with `rel="noopener"`)
-- [ ] T035 [P] [US2] Create `src/components/ProjectScreenshots.astro` (responsive `<Picture>` per screenshot with alt text fallback)
-- [ ] T036 [US2] Create `src/layouts/ProjectLayout.astro` (BaseLayout + header section with title/badge/period/role/tech stack/links + slot for body content) — depends on T017, T024, T033, T034
-- [ ] T037 [US2] Create project detail page `src/pages/projects/[slug].astro` with `getStaticPaths` over all three collections (flat URL space `/projects/<slug>/`), render Markdown body via `<Content />`, include screenshots — depends on T012, T035, T036
+- [X] T033 [P] [US2] Create `src/components/TechStack.astro` (renders chips for each `techStack` entry, semantic `<ul>`)
+- [X] T034 [P] [US2] Create `src/components/ProjectLinks.astro` (conditionally renders source/live/case-study links, each as a real `<a>` with `rel="noopener"`)
+- [X] T035 [P] [US2] Create `src/components/ProjectScreenshots.astro` (responsive `<Picture>` per screenshot with alt text fallback)
+- [X] T036 [US2] Create `src/layouts/ProjectLayout.astro` (BaseLayout + header section with title/badge/period/role/tech stack/links + slot for body content) — depends on T017, T024, T033, T034
+- [X] T037 [US2] Create project detail page `src/pages/projects/[slug].astro` with `getStaticPaths` over all three collections (flat URL space `/projects/<slug>/`), render Markdown body via `<Content />`, include screenshots — depends on T012, T035, T036
 
 **Checkpoint**: User Stories 1 and 2 both work independently. End-to-end browsing is complete.
 
@@ -124,14 +124,14 @@ description: "Dependency-ordered task list for the Portfolio Showcase Site featu
 
 ### Tests for User Story 3
 
-- [ ] T038 [P] [US3] Vitest schema-validation tests in `tests/unit/schema.test.ts` (parses valid template fixture, rejects missing required fields with field name in error, rejects invalid slug pattern, rejects bad period range)
-- [ ] T039 [P] [US3] Vitest test for slug-collision detector in `tests/unit/slug.test.ts` (asserts `assertNoCollisions` throws and lists both file paths)
+- [X] T038 [P] [US3] Vitest schema-validation tests in `tests/unit/schema.test.ts` (parses valid template fixture, rejects missing required fields with field name in error, rejects invalid slug pattern, rejects bad period range)
+- [X] T039 [P] [US3] Vitest test for slug-collision detector in `tests/unit/slug.test.ts` (asserts `assertNoCollisions` throws and lists both file paths)
 
 ### Implementation for User Story 3
 
-- [ ] T040 [P] [US3] Copy contract template to user-facing location: create `templates/project.md` from `specs/001-portfolio-showcase/contracts/project-template.md` (single source of truth — keep the contract version as the canonical reference and copy at this step)
-- [ ] T041 [P] [US3] Add fixture project Markdown files for tests in `tests/fixtures/projects/` (one valid, one missing-field, one bad-slug, one collision pair)
-- [ ] T042 [US3] Update root `README.md` with "Adding a new project" section: prerequisites, copy command, frontmatter explanation, image asset instructions, build verification step (mirrors quickstart.md Step 3)
+- [X] T040 [P] [US3] Copy contract template to user-facing location: create `templates/project.md` from `specs/001-portfolio-showcase/contracts/project-template.md` (single source of truth — keep the contract version as the canonical reference and copy at this step)
+- [X] T041 [P] [US3] Add fixture project Markdown files for tests in `tests/fixtures/projects/` (one valid, one missing-field, one bad-slug, one collision pair)
+- [X] T042 [US3] Update root `README.md` with "Adding a new project" section: prerequisites, copy command, frontmatter explanation, image asset instructions, build verification step (mirrors quickstart.md Step 3)
 
 **Checkpoint**: Content workflow is documented and validated. Owner can self-serve adding projects.
 
@@ -145,13 +145,13 @@ description: "Dependency-ordered task list for the Portfolio Showcase Site featu
 
 ### Tests for User Story 4
 
-- [ ] T043 [P] [US4] Playwright responsive tests in `tests/e2e/responsive.spec.ts` running landing + category + detail pages at 320, 768, 1280 viewports (asserts layout, no horizontal overflow, mobile menu reachable on 320)
+- [X] T043 [P] [US4] Playwright responsive tests in `tests/e2e/responsive.spec.ts` running landing + category + detail pages at 320, 768, 1280 viewports (asserts layout, no horizontal overflow, mobile menu reachable on 320)
 
 ### Implementation for User Story 4
 
-- [ ] T044 [US4] Add mobile menu disclosure to `src/components/SiteHeader.astro` (hamburger button, `aria-expanded`, `aria-controls`, focus management, closes on Escape, hidden ≥ `md` breakpoint) — modifies T018
-- [ ] T045 [P] [US4] Audit and refine responsive utilities in `ProjectGrid` and `Hero` to enforce 320 → 1-col, 768 → 2-col, 1280+ → 3-col (verify with the new e2e tests)
-- [ ] T046 [P] [US4] Add `viewport` meta and `theme-color` confirmation in BaseLayout, plus a mobile-friendly type scale via Tailwind `clamp()` utilities in `tailwind.config.ts`
+- [X] T044 [US4] Add mobile menu disclosure to `src/components/SiteHeader.astro` (hamburger button, `aria-expanded`, `aria-controls`, focus management, closes on Escape, hidden ≥ `md` breakpoint) — modifies T018
+- [X] T045 [P] [US4] Audit and refine responsive utilities in `ProjectGrid` and `Hero` to enforce 320 → 1-col, 768 → 2-col, 1280+ → 3-col (verify with the new e2e tests)
+- [X] T046 [P] [US4] Add `viewport` meta and `theme-color` confirmation in BaseLayout, plus a mobile-friendly type scale via Tailwind `clamp()` utilities in `tailwind.config.ts`
 
 **Checkpoint**: SC-006 is measurably satisfied. The site works at all required breakpoints.
 
@@ -169,12 +169,12 @@ description: "Dependency-ordered task list for the Portfolio Showcase Site featu
 
 ### Implementation for User Story 5
 
-- [ ] T047 [P] [US5] Create `lighthouserc.json` with budgets (Performance ≥ 90 mobile, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 95, LCP < 2.5s) and assertions
-- [ ] T048 [P] [US5] Create `playwright.config.ts` with chromium project, viewports for mobile/tablet/desktop, `webServer` running `npm run preview`, retries in CI
-- [ ] T049 [P] [US5] Create `vitest.config.ts` with TypeScript path resolution and coverage settings
-- [ ] T050 [US5] Create `.github/workflows/ci.yml` (triggers: pull_request, push; jobs: install → typecheck → lint → unit tests → build → e2e + axe → lighthouse CI; uploads artifacts on failure)
-- [ ] T051 [US5] Create `.github/workflows/deploy.yml` (trigger: push to main; jobs: build with `BASE_PATH` from repo name → upload `dist/` via `actions/upload-pages-artifact@v3` → `actions/deploy-pages@v4`; permissions: pages:write, id-token:write; concurrency group `pages`)
-- [ ] T052 [US5] Document GitHub Pages activation steps in README (Settings → Pages → Source: GitHub Actions; custom domain note)
+- [X] T047 [P] [US5] Create `lighthouserc.json` with budgets (Performance ≥ 90 mobile, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 95, LCP < 2.5s) and assertions
+- [X] T048 [P] [US5] Create `playwright.config.ts` with chromium project, viewports for mobile/tablet/desktop, `webServer` running `npm run preview`, retries in CI
+- [X] T049 [P] [US5] Create `vitest.config.ts` with TypeScript path resolution and coverage settings
+- [X] T050 [US5] Create `.github/workflows/ci.yml` (triggers: pull_request, push; jobs: install → typecheck → lint → unit tests → build → e2e + axe → lighthouse CI; uploads artifacts on failure)
+- [X] T051 [US5] Create `.github/workflows/deploy.yml` (trigger: push to main; jobs: build with `BASE_PATH` from repo name → upload `dist/` via `actions/upload-pages-artifact@v3` → `actions/deploy-pages@v4`; permissions: pages:write, id-token:write; concurrency group `pages`)
+- [X] T052 [US5] Document GitHub Pages activation steps in README (Settings → Pages → Source: GitHub Actions; custom domain note)
 
 **Checkpoint**: Push-to-deploy is fully automated. SC-007 satisfied.
 
@@ -184,14 +184,14 @@ description: "Dependency-ordered task list for the Portfolio Showcase Site featu
 
 **Purpose**: Edge cases, SEO, polish, and final validation across all user stories.
 
-- [ ] T053 Create 404 page `src/pages/404.astro` (BaseLayout + friendly message + link back to home + recent projects suggestion) — addresses FR-011 and the removed-project edge case
-- [ ] T054 [P] Add Open Graph + Twitter Card meta to `BaseLayout.astro` accepting per-page overrides (title, description, image) and use project thumbnail on detail pages
-- [ ] T055 [P] Add `robots.txt` and verify sitemap output covers all project + category pages
-- [ ] T056 [P] Add empty-body handling in `ProjectLayout.astro` (renders "No description provided." note when Markdown body is empty — covers spec edge case)
-- [ ] T057 [P] Add missing-image placeholder behavior: `src/lib/assets.ts` returns a placeholder path when source missing (still warn at build, but don't crash dev) — covers spec edge case
-- [ ] T058 [P] Run quickstart.md acceptance walkthrough end-to-end and check off each scenario
-- [ ] T059 [P] Run final manual accessibility audit: keyboard-only navigation across all routes, screen-reader pass on detail page, contrast check on category badges
-- [ ] T060 Update root `README.md` with project overview, tech stack, local dev instructions, "Adding a new project" link, deployment notes, and a constitution compliance summary
+- [X] T053 Create 404 page `src/pages/404.astro` (BaseLayout + friendly message + link back to home + recent projects suggestion) — addresses FR-011 and the removed-project edge case
+- [X] T054 [P] Add Open Graph + Twitter Card meta to `BaseLayout.astro` accepting per-page overrides (title, description, image) and use project thumbnail on detail pages
+- [X] T055 [P] Add `robots.txt` and verify sitemap output covers all project + category pages
+- [X] T056 [P] Add empty-body handling in `ProjectLayout.astro` (renders "No description provided." note when Markdown body is empty — covers spec edge case)
+- [X] T057 [P] Add missing-image placeholder behavior: `src/lib/assets.ts` returns a placeholder path when source missing (still warn at build, but don't crash dev) — covers spec edge case
+- [X] T058 [P] Run quickstart.md acceptance walkthrough end-to-end and check off each scenario
+- [X] T059 [P] Run final manual accessibility audit: keyboard-only navigation across all routes, screen-reader pass on detail page, contrast check on category badges
+- [X] T060 Update root `README.md` with project overview, tech stack, local dev instructions, "Adding a new project" link, deployment notes, and a constitution compliance summary
 
 ---
 
