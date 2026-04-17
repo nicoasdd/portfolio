@@ -2,8 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectGrid from '../components/ProjectGrid.astro';
 import { getAllProjects } from '../lib/projects';
+import { withBase } from '../lib/url';
 
 const recent = (await getAllProjects()).slice(0, 3);
+const homeHref = withBase('/');
 ---
 
 <BaseLayout title="Page not found" description="The page you were looking for could not be found." noindex>
@@ -16,7 +18,7 @@ const recent = (await getAllProjects()).slice(0, 3);
     </p>
     <div class="mt-8">
       <a
-        href="/"
+        href={homeHref}
         class="inline-flex items-center justify-center rounded-full bg-[var(--color-accent)] text-white font-semibold px-6 py-3 no-underline hover:bg-[var(--color-accent-hover)]"
       >
         Back to home

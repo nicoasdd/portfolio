@@ -4,6 +4,7 @@ import CategoryBadge from '../components/CategoryBadge.astro';
 import TechStack from '../components/TechStack.astro';
 import ProjectLinks from '../components/ProjectLinks.astro';
 import type { ProjectWithMeta } from '../lib/projects';
+import { withBase } from '../lib/url';
 
 interface Props {
   project: ProjectWithMeta;
@@ -12,6 +13,7 @@ interface Props {
 const { project } = Astro.props;
 const { entry, category } = project;
 const data = entry.data;
+const categoryHref = withBase(`/category/${category}/`);
 ---
 
 <BaseLayout
@@ -22,7 +24,7 @@ const data = entry.data;
 >
   <article class="container-narrow pt-12 pb-16">
     <p class="m-0">
-      <a href={`/category/${category}/`} class="text-sm text-[var(--color-text-muted)] no-underline hover:underline">
+      <a href={categoryHref} class="text-sm text-[var(--color-text-muted)] no-underline hover:underline">
         ← Back to {category}
       </a>
     </p>
