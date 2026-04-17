@@ -1,5 +1,6 @@
 ---
 import { CATEGORY_KEYS, CATEGORY_LABELS } from '../content.config';
+import { withBase } from '../lib/url';
 
 interface Props {
   showAll?: boolean;
@@ -8,11 +9,12 @@ interface Props {
 
 const { showAll = true, ariaLabel = 'Project categories' } = Astro.props;
 const pathname = Astro.url.pathname;
+const homeHref = withBase('/');
 
 const items = [
-  ...(showAll ? [{ href: '/', label: 'All', active: pathname === '/' }] : []),
+  ...(showAll ? [{ href: homeHref, label: 'All', active: pathname === homeHref }] : []),
   ...CATEGORY_KEYS.map((cat) => {
-    const href = `/category/${cat}/`;
+    const href = withBase(`/category/${cat}/`);
     return { href, label: CATEGORY_LABELS[cat], active: pathname.startsWith(href) };
   }),
 ];

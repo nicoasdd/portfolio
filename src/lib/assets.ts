@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { withBase } from './url';
 
 const PUBLIC_DIR = join(process.cwd(), 'public');
 const PLACEHOLDER = '/projects/_placeholder.svg';
@@ -19,7 +20,7 @@ export function imageExists(relPath: string): boolean {
 }
 
 export function safeImagePath(relPath: string): string {
-  return imageExists(relPath) ? relPath : PLACEHOLDER;
+  return withBase(imageExists(relPath) ? relPath : PLACEHOLDER);
 }
 
 export function checkImages(paths: string[]): AssetCheck[] {

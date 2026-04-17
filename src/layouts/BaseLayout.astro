@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { withBase } from '../lib/url';
 
 interface Props {
   title: string;
@@ -22,7 +23,9 @@ const {
 const siteName = 'Portfolio';
 const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
-const ogImage = image ? new URL(image, Astro.site ?? Astro.url).toString() : undefined;
+const ogImage = image
+  ? new URL(withBase(image), Astro.site ?? Astro.url).toString()
+  : undefined;
 ---
 
 <!doctype html>
@@ -37,7 +40,7 @@ const ogImage = image ? new URL(image, Astro.site ?? Astro.url).toString() : und
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL.toString()} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
 
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />

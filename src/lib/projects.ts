@@ -1,6 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { CATEGORY_KEYS, type CategoryKey } from '../content.config';
 import { sortProjects as sortProjectsPure } from './sort';
+import { withBase } from './url';
 
 export type ProjectEntry = CollectionEntry<CategoryKey>;
 
@@ -27,7 +28,7 @@ function withMeta(entry: ProjectEntry, category: CategoryKey): ProjectWithMeta {
     entry,
     category,
     slug,
-    url: `/projects/${slug}/`,
+    url: withBase(`/projects/${slug}/`),
   };
 }
 
