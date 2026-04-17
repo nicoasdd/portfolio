@@ -101,25 +101,106 @@ git push
 
 The deploy workflow takes over from there (see below).
 
+## Edit your About content
+
+The About page (`/about/`) and the landing-page teaser are both driven by a
+**single Markdown file**: `src/content/about/profile.md`. There is no code to
+touch — edit the frontmatter and body, run `npm run build`, ship.
+
+### 1. (First time only) Copy the template
+
+```bash
+cp templates/about.md src/content/about/profile.md
+```
+
+A starter `profile.md` already ships with the repo, so you usually just edit it
+in place. There must be **exactly one** `*.md` file under `src/content/about/`.
+
+### 2. Fill in the frontmatter
+
+| Field | Required | Description |
+|---|---|---|
+| `name` | yes | Your display name (1–80 chars). |
+| `headline` | yes | Professional title or one-line tagline (1–120 chars). |
+| `intro` | yes | Single short paragraph used by the landing-page teaser (1–240 chars). |
+| `photo` | yes | Path under `public/` to your photo (e.g. `/about/profile.svg`). |
+| `email` | yes | Contact email — rendered as a `mailto:` link. |
+| `skills` | yes | Array of 1–40 strings (skills, focus areas). |
+| `photoAlt` | no | Override the default `alt` (defaults to `"Portrait of {name}"`). |
+| `location` | no | E.g. `"Remote · EU timezone"`. Renders as a small badge. |
+| `availability` | no | E.g. `"Open to opportunities"`. Renders as an accent badge. |
+| `socialLinks` | no | Array of `{ label, url, icon? }`. URLs must be `http(s)`. |
+| `resumeUrl` | no | Absolute URL or path under `public/` (e.g. `/about/resume.pdf`). |
+
+`socialLinks[].icon` accepts: `github`, `linkedin`, `x`, `mastodon`, `bluesky`,
+`email`, `website`. Unknown values are rejected at build time.
+
+The body of the file (everything after the closing `---`) is the long-form bio
+and is rendered with full Markdown support beneath the header. **The body must
+not be empty.**
+
+The full schema lives in [`src/content.config.ts`](./src/content.config.ts) and
+is documented in
+[`specs/002-about-section/data-model.md`](./specs/002-about-section/data-model.md).
+
+### 3. Add your photo (and optional CV)
+
+Drop your photo at the path you referenced from `photo`:
+
+```bash
+# Replace the placeholder
+cp ~/Pictures/me.webp public/about/profile.webp
+# Then update profile.md: photo: "/about/profile.webp"
+```
+
+If `resumeUrl` is set to a relative path, place the file alongside it:
+
+```bash
+cp ~/Documents/cv.pdf public/about/resume.pdf
+# In profile.md: resumeUrl: "/about/resume.pdf"
+```
+
+If the photo file is missing at build time, the site falls back to the shared
+placeholder so the layout never breaks — but you'll see a warning in the build
+log from `[content-validator]`.
+
+### 4. Verify locally
+
+```bash
+npm run build      # fails fast if any required About field is missing
+npm run dev        # http://localhost:4321/about/
+```
+
+The validator prints a confirmation line on success:
+
+```text
+[content-validator] About profile validated: profile.md (N skills).
+```
+
+If you remove a required field or empty out the body, the build halts with a
+clear, file-and-field-specific error.
+
 ## Project structure
 
 ```text
 src/
 ├── content/
 │   ├── projects/{personal,startup,corporate}/*.md   # Project content
-├── content.config.ts                                # Zod schema + collections
-├── components/   # Hero, ProjectCard, ProjectGrid, CategoryNav, ...
+│   └── about/profile.md                             # About content (single entry)
+├── content.config.ts                                # Zod schemas + collections
+├── components/   # Hero, ProjectCard, ProjectGrid, CategoryNav, AboutTeaser, SkillsList, SocialLinks, ...
 ├── layouts/      # BaseLayout, ProjectLayout
-├── lib/          # projects, sort, slug, assets helpers
+├── lib/          # projects, about, sort, slug, assets, url helpers
 ├── integrations/ # build-time content validator
-├── pages/        # / , /category/[category]/ , /projects/[slug]/ , 404
+├── pages/        # / , /about/ , /category/[category]/ , /projects/[slug]/ , 404
 └── styles/global.css                                # Tailwind 4 + @theme tokens
 
 templates/project.md                                 # Copy this to add a project
-public/                                              # Static assets
+templates/about.md                                   # Copy this to author the About page
+public/{projects,about}/                             # Static assets
 .github/workflows/                                   # CI + deploy
 tests/{unit,e2e}/                                    # Vitest + Playwright
-specs/001-portfolio-showcase/                        # Spec, plan, tasks
+specs/{001-portfolio-showcase,002-about-section}/    # Spec, plan, tasks
 ```
 
 ## Deployment to GitHub Pages

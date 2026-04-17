@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/url';
+
 interface Props {
   heading?: string;
   intro?: string;
@@ -12,6 +14,8 @@ const {
   ctaHref = '#projects',
   ctaLabel = 'See projects',
 } = Astro.props;
+
+const aboutHref = withBase('/about/');
 ---
 
 <section class="container-narrow pt-12 md:pt-20 pb-12">
@@ -29,7 +33,7 @@ const {
       {ctaLabel}
     </a>
     <a
-      href="#about"
+      href={aboutHref}
       class="inline-flex items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text)] font-semibold px-6 py-3 no-underline hover:border-[var(--color-accent)]"
     >
       About

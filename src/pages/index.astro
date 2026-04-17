@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import CategoryNav from '../components/CategoryNav.astro';
 import ProjectGrid from '../components/ProjectGrid.astro';
+import AboutTeaser from '../components/AboutTeaser.astro';
 import { getAllProjects, getFeatured } from '../lib/projects';
 
 const featured = await getFeatured();
@@ -21,4 +22,5 @@ const showcase = featured.length > 0 ? featured : all.slice(0, 6);
     headingId="projects"
     emptyMessage="No projects published yet — add your first Markdown file under src/content/projects/."
   />
+  <AboutTeaser />
 </BaseLayout>
