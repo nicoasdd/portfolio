@@ -9,6 +9,8 @@ alwaysApply: true
 Auto-generated from all feature plans. Last updated: 2026-04-17
 
 ## Active Technologies
+- TypeScript 5.x (Node.js 20 LTS) — same as existing projec + Astro 5.x, Tailwind CSS 4.x (via `@tailwindcss/vite`), Astro Content Collections (Markdown + Zod), `@astrojs/sitemap`. No new runtime dependencies introduced by this feature. (002-about-section)
+- Filesystem — single Markdown file at `src/content/about/profile.md`; profile photo and optional resume PDF under `public/about/`. (002-about-section)
 
 - TypeScript 5.x (Node.js 20 LTS) + Astro 5.x, Tailwind CSS 4.x, `@astrojs/tailwind`, `@astrojs/sitemap`, Astro Content Collections (Markdown + Zod schemas) (001-portfolio-showcase)
 
@@ -29,6 +31,7 @@ npm test && npm run lint
 TypeScript 5.x (Node.js 20 LTS): Follow standard conventions
 
 ## Recent Changes
+- 002-about-section: Added TypeScript 5.x (Node.js 20 LTS) — same as existing projec + Astro 5.x, Tailwind CSS 4.x (via `@tailwindcss/vite`), Astro Content Collections (Markdown + Zod), `@astrojs/sitemap`. No new runtime dependencies introduced by this feature.
 
 - 001-portfolio-showcase: Added TypeScript 5.x (Node.js 20 LTS) + Astro 5.x, Tailwind CSS 4.x, `@astrojs/tailwind`, `@astrojs/sitemap`, Astro Content Collections (Markdown + Zod schemas)
 
