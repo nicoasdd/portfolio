@@ -6,6 +6,8 @@ import { getMissingImages } from './validator-helpers';
 
 const CATEGORIES = ['personal', 'startup', 'corporate'] as const;
 
+const ABOUT_REQUIRED_FIELDS = ['name', 'headline', 'intro', 'photo', 'email', 'skills'] as const;
+
 function listMarkdownFiles(dir: string): string[] {
   let results: string[] = [];
   let entries: string[];
@@ -81,6 +83,47 @@ export default function contentValidator(): AstroIntegration {
 
         assertNoCollisions(sources);
 
+        const aboutDir = join(root, 'src', 'content', 'about');
+        const aboutFiles = listMarkdownFiles(aboutDir);
+
+        if (aboutFiles.length === 0) {
+          throw new Error(
+            '[content-validator] About content is required at src/content/about/profile.md but no .md file was found.',
+          );
+        }
+        if (aboutFiles.length > 1) {
+          const paths = aboutFiles.map((f) => f.replace(root + '/', '')).join(', ');
+          throw new Error(
+            `[content-validator] Expected exactly one About entry under src/content/about/, found ${aboutFiles.length}: ${paths}`,
+          );
+        }
+
+        const aboutFile = aboutFiles[0];
+        const aboutContent = readFileSync(aboutFile, 'utf8');
+        const aboutFm = extractFrontmatter(aboutContent);
+        const aboutRelPath = aboutFile.replace(root + '/', '');
+
+        const missingFields: string[] = [];
+        for (const field of ABOUT_REQUIRED_FIELDS) {
+          const value = aboutFm[field];
+          const isMissing =
+            value === undefined ||
+            value === null ||
+            (typeof value === 'string' && value.trim() === '') ||
+            (Array.isArray(value) && value.length === 0);
+          if (isMissing) missingFields.push(field);
+        }
+        if (missingFields.length > 0) {
+          throw new Error(
+            `[content-validator] About content at ${aboutRelPath} is missing required field(s): ${missingFields.join(', ')}.`,
+          );
+        }
+
+        const aboutPhoto = aboutFm.photo as string | undefined;
+        if (aboutPhoto) imagePaths.push(aboutPhoto);
+
+        const aboutSkillsCount = Array.isArray(aboutFm.skills) ? aboutFm.skills.length : 0;
+
         const missing = getMissingImages(imagePaths);
         if (missing.length > 0) {
           console.warn(
@@ -90,6 +133,9 @@ export default function contentValidator(): AstroIntegration {
 
         console.warn(
           `[content-validator] Validated ${sources.length} project(s) across ${CATEGORIES.length} categories.`,
+        );
+        console.warn(
+          `[content-validator] About profile validated: ${aboutRelPath.split('/').pop()} (${aboutSkillsCount} skills).`,
         );
       },
     },

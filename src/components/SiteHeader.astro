@@ -4,6 +4,7 @@ import { withBase } from '../lib/url';
 
 const pathname = Astro.url.pathname;
 const homeHref = withBase('/');
+const aboutHref = withBase('/about/');
 const isActive = (href: string) => pathname === href || pathname.startsWith(href);
 ---
 
@@ -45,6 +46,18 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
             aria-current={pathname === homeHref ? 'page' : undefined}
           >
             Home
+          </a>
+        </li>
+        <li>
+          <a
+            href={aboutHref}
+            class:list={[
+              'no-underline px-2 py-1 rounded text-[var(--color-text)] hover:text-[var(--color-accent)]',
+              isActive(aboutHref) && 'text-[var(--color-accent)]',
+            ]}
+            aria-current={isActive(aboutHref) ? 'page' : undefined}
+          >
+            About
           </a>
         </li>
         {CATEGORY_KEYS.map((cat) => {

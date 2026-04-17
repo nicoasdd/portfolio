@@ -32,9 +32,9 @@ description: "Dependency-ordered task list for the About Section feature"
 
 **Purpose**: No new dependencies are needed for this feature. The Setup phase only ensures the new asset/content/template directories exist and are tracked.
 
-- [ ] T001 [P] Create the assets directory `public/about/` (kept by adding a `public/about/.gitkeep` placeholder so the empty dir is committable)
-- [ ] T002 [P] Create the content directory `src/content/about/` (kept by adding a `src/content/about/.gitkeep` placeholder; will be replaced by `profile.md` in T020)
-- [ ] T003 [P] Copy the contract template to the user-facing location: `cp specs/002-about-section/contracts/about-template.md templates/about.md` (this is the file the owner copies when editing About content)
+- [X] T001 [P] Create the assets directory `public/about/` (kept by adding a `public/about/.gitkeep` placeholder so the empty dir is committable)
+- [X] T002 [P] Create the content directory `src/content/about/` (kept by adding a `src/content/about/.gitkeep` placeholder; will be replaced by `profile.md` in T020)
+- [X] T003 [P] Copy the contract template to the user-facing location: `cp specs/002-about-section/contracts/about-template.md templates/about.md` (this is the file the owner copies when editing About content)
 
 ---
 
@@ -44,11 +44,11 @@ description: "Dependency-ordered task list for the About Section feature"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 Extend the Zod schema and add the `about` collection in `src/content.config.ts` per `specs/002-about-section/data-model.md` (single-entry collection at `src/content/about/`, schema with required `name`, `headline`, `intro`, `photo`, `email`, `skills` and optional `photoAlt`, `location`, `availability`, `socialLinks[]`, `resumeUrl`); export `AboutFrontmatter` type
-- [ ] T005 Create `src/lib/about.ts` exposing `getAbout(): Promise<AboutEntry>` that loads the single entry from the `about` collection, throws a clear error if the collection has 0 or >1 entries (VR-8), enforces non-empty body (VR-7), synthesizes `effectiveAlt = photoAlt ?? "Portrait of " + name`, and resolves `resumeHref` via `withBase()` for relative `resumeUrl` values
-- [ ] T006 Extend `src/integrations/content-validator.ts` to (a) assert that exactly one `*.md` file exists under `src/content/about/`, (b) parse its frontmatter and assert presence + non-emptiness of required fields (`name`, `headline`, `intro`, `photo`, `email`, `skills`), (c) register the `photo` path with the existing missing-image check, and (d) log a single confirmation line on success (e.g. `[content-validator] About profile validated: profile.md (N skills, M social links)`)
-- [ ] T007 Seed the live About content file at `src/content/about/profile.md` by copying `templates/about.md` and filling with safe placeholder values (name "Your Name", placeholder headline/intro/email, an example skills array of 3–5 entries, no social links, no resume); replaces the `.gitkeep` from T002
-- [ ] T008 [P] Add a placeholder profile photo at `public/about/profile.webp` (any valid optimized WebP, ~50–80 KB, neutral silhouette or actual photo if available) so the path referenced from `profile.md` resolves at build time
+- [X] T004 Extend the Zod schema and add the `about` collection in `src/content.config.ts` per `specs/002-about-section/data-model.md` (single-entry collection at `src/content/about/`, schema with required `name`, `headline`, `intro`, `photo`, `email`, `skills` and optional `photoAlt`, `location`, `availability`, `socialLinks[]`, `resumeUrl`); export `AboutFrontmatter` type
+- [X] T005 Create `src/lib/about.ts` exposing `getAbout(): Promise<AboutEntry>` that loads the single entry from the `about` collection, throws a clear error if the collection has 0 or >1 entries (VR-8), enforces non-empty body (VR-7), synthesizes `effectiveAlt = photoAlt ?? "Portrait of " + name`, and resolves `resumeHref` via `withBase()` for relative `resumeUrl` values
+- [X] T006 Extend `src/integrations/content-validator.ts` to (a) assert that exactly one `*.md` file exists under `src/content/about/`, (b) parse its frontmatter and assert presence + non-emptiness of required fields (`name`, `headline`, `intro`, `photo`, `email`, `skills`), (c) register the `photo` path with the existing missing-image check, and (d) log a single confirmation line on success (e.g. `[content-validator] About profile validated: profile.md (N skills, M social links)`)
+- [X] T007 Seed the live About content file at `src/content/about/profile.md` by copying `templates/about.md` and filling with safe placeholder values (name "Your Name", placeholder headline/intro/email, an example skills array of 3–5 entries, no social links, no resume); replaces the `.gitkeep` from T002
+- [X] T008 [P] Add a placeholder profile photo at `public/about/profile.svg` (SVG placeholder matching the convention used by existing project thumbnails — schema accepts any path; live photo can be swapped in later by the owner) so the path referenced from `profile.md` resolves at build time
 
 **Checkpoint**: `npm run dev` starts without errors; `npm run build` succeeds and prints the new `[content-validator] About profile validated: …` line; `getAbout()` is type-checked and returns the seeded entry.
 
@@ -62,17 +62,17 @@ description: "Dependency-ordered task list for the About Section feature"
 
 ### Tests for User Story 1
 
-- [ ] T009 [P] [US1] Vitest unit tests for `src/lib/about.ts` and the about Zod schema in `tests/unit/about.test.ts`: schema accepts a complete fixture; schema rejects fixtures missing each required field individually (`name`, `headline`, `intro`, `photo`, `email`, `skills`); schema rejects malformed `email`, non-`http(s)` `socialLinks[].url`, and a `resumeUrl` that is neither absolute nor begins with `/`; `getAbout()` throws when the collection is empty or contains >1 entry; `getAbout()` synthesizes `effectiveAlt` when `photoAlt` is omitted
-- [ ] T010 [P] [US1] Playwright e2e in `tests/e2e/about.spec.ts` covering US1 acceptance scenarios: AS-1 (header "About" link navigates to `/about/` from `/`, from a category page, and from a project detail page), AS-2 (page renders name, headline, photo, bio, skills chips, contact email above the fold at desktop viewport), AS-3 (email link has `mailto:` href; each social link has `target="_blank"` and `rel` containing `noopener` and `noreferrer`), AS-4 (when `resumeUrl` is present, "Download CV" link is visible and points to the resolved href)
-- [ ] T011 [P] [US1] Extend `tests/e2e/a11y.spec.ts` to add `/about/` to the axe-core sweep (zero serious/critical violations; explicitly assert profile image has an `alt` attribute)
+- [X] T009 [P] [US1] Vitest unit tests for `src/lib/about.ts` and the about Zod schema in `tests/unit/about.test.ts`: schema accepts a complete fixture; schema rejects fixtures missing each required field individually (`name`, `headline`, `intro`, `photo`, `email`, `skills`); schema rejects malformed `email`, non-`http(s)` `socialLinks[].url`, and a `resumeUrl` that is neither absolute nor begins with `/`; `getAbout()` throws when the collection is empty or contains >1 entry; `getAbout()` synthesizes `effectiveAlt` when `photoAlt` is omitted
+- [X] T010 [P] [US1] Playwright e2e in `tests/e2e/about.spec.ts` covering US1 acceptance scenarios: AS-1 (header "About" link navigates to `/about/` from `/`, from a category page, and from a project detail page), AS-2 (page renders name, headline, photo, bio, skills chips, contact email above the fold at desktop viewport), AS-3 (email link has `mailto:` href; each social link has `target="_blank"` and `rel` containing `noopener` and `noreferrer`), AS-4 (when `resumeUrl` is present, "Download CV" link is visible and points to the resolved href)
+- [X] T011 [P] [US1] Extend `tests/e2e/a11y.spec.ts` to add `/about/` to the axe-core sweep (zero serious/critical violations; explicitly assert profile image has an `alt` attribute)
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create `src/components/SkillsList.astro` — accepts `skills: string[]`, renders a chip cloud styled identically to the existing `TechStack` chips (Principle VI: visual consistency); semantic `<ul role="list">` of `<li>` chips
-- [ ] T013 [P] [US1] Create `src/components/SocialLinks.astro` — accepts `links: { label, url, icon? }[]`, renders an inline `<ul>` of `<a target="_blank" rel="noopener noreferrer">` items; bundles inline SVGs for `github`, `linkedin`, `x`, `mastodon`, `bluesky`, `email`, `website`, with a generic external-link glyph fallback for unknown/omitted icons; visible label is always rendered for accessibility
-- [ ] T014 [US1] Modify `src/components/SiteHeader.astro` to add an "About" `<li>` between the "Home" link and the category links; reuse the existing `withBase('/about/')` + `isActive(href)` pattern so the link gets `aria-current="page"` and the active styling on `/about/`
-- [ ] T015 [US1] Create `src/pages/about.astro` — uses `BaseLayout` (with title `"About"` and the bio's first sentence as the meta description); renders the profile photo via `astro:assets` `<Image>` with `loading="eager"`, `widths={[160, 320, 640]}`, and `alt={effectiveAlt}`; `<h1>` shows `name`, sub-heading shows `headline`, optional `<address>` block lists location + availability badges; long-form bio rendered from the Markdown body; `<SkillsList>`, `<SocialLinks>`, contact `mailto:` link, and conditional `resumeUrl` "Download CV" button — depends on T005, T012, T013
-- [ ] T016 [US1] Implement the missing-photo runtime fallback: when `astro:assets` cannot resolve `photo` (file missing), `pages/about.astro` renders a neutral placeholder avatar component instead so the layout never breaks (Edge Case from spec)
+- [X] T012 [P] [US1] Create `src/components/SkillsList.astro` — accepts `skills: string[]`, renders a chip cloud styled identically to the existing `TechStack` chips (Principle VI: visual consistency); semantic `<ul role="list">` of `<li>` chips
+- [X] T013 [P] [US1] Create `src/components/SocialLinks.astro` — accepts `links: { label, url, icon? }[]`, renders an inline `<ul>` of `<a target="_blank" rel="noopener noreferrer">` items; bundles inline SVGs for `github`, `linkedin`, `x`, `mastodon`, `bluesky`, `email`, `website`, with a generic external-link glyph fallback for unknown/omitted icons; visible label is always rendered for accessibility
+- [X] T014 [US1] Modify `src/components/SiteHeader.astro` to add an "About" `<li>` between the "Home" link and the category links; reuse the existing `withBase('/about/')` + `isActive(href)` pattern so the link gets `aria-current="page"` and the active styling on `/about/`
+- [X] T015 [US1] Create `src/pages/about.astro` — uses `BaseLayout` (with title `"About"` and the bio's first sentence as the meta description); renders the profile photo via `astro:assets` `<Image>` with `loading="eager"`, `widths={[160, 320, 640]}`, and `alt={effectiveAlt}`; `<h1>` shows `name`, sub-heading shows `headline`, optional `<address>` block lists location + availability badges; long-form bio rendered from the Markdown body; `<SkillsList>`, `<SocialLinks>`, contact `mailto:` link, and conditional `resumeUrl` "Download CV" button — depends on T005, T012, T013
+- [X] T016 [US1] Implement the missing-photo runtime fallback: when `astro:assets` cannot resolve `photo` (file missing), `pages/about.astro` renders a neutral placeholder avatar component instead so the layout never breaks (Edge Case from spec) — implemented via `safeImagePath` helper which already provides this fallback
 
 **Checkpoint**: `/about/` is fully functional and reachable in 1 click from every page. The MVP is shippable: even before US2 and US3 ship, recruiters can find and read About content.
 
@@ -86,12 +86,12 @@ description: "Dependency-ordered task list for the About Section feature"
 
 ### Tests for User Story 2
 
-- [ ] T017 [P] [US2] Add Playwright e2e in `tests/e2e/about.spec.ts` (same file as US1 tests, separate `describe` block) covering US2 acceptance scenarios: AS-1 (teaser block is present on `/` with photo, name, headline, and `intro` text — explicitly assert the long-form bio is NOT present in the teaser to confirm truncation behavior), AS-2 (clicking the "Read more" link navigates to `/about/`)
+- [X] T017 [P] [US2] Add Playwright e2e in `tests/e2e/about.spec.ts` (same file as US1 tests, separate `describe` block) covering US2 acceptance scenarios: AS-1 (teaser block is present on `/` with photo, name, headline, and `intro` text — explicitly assert the long-form bio is NOT present in the teaser to confirm truncation behavior), AS-2 (clicking the "Read more" link navigates to `/about/`)
 
 ### Implementation for User Story 2
 
-- [ ] T018 [P] [US2] Create `src/components/AboutTeaser.astro` — calls `getAbout()` internally, renders a compact two-column block (photo on one side at small size via `astro:assets` `<Image widths={[120, 240]} loading="lazy">`, text on the other); shows `name`, `headline`, `intro`, and a "Read more →" link to `withBase('/about/')`; uses `container-narrow` and matches the visual rhythm of `Hero` and `ProjectGrid` (Principle VI)
-- [ ] T019 [US2] Modify `src/pages/index.astro` to import and render `<AboutTeaser />` immediately after the existing `<ProjectGrid>` (so projects remain the primary focus per Principle I, with About as a complementary section) — depends on T018
+- [X] T018 [P] [US2] Create `src/components/AboutTeaser.astro` — calls `getAbout()` internally, renders a compact two-column block (photo on one side at small size via `astro:assets` `<Image widths={[120, 240]} loading="lazy">`, text on the other); shows `name`, `headline`, `intro`, and a "Read more →" link to `withBase('/about/')`; uses `container-narrow` and matches the visual rhythm of `Hero` and `ProjectGrid` (Principle VI)
+- [X] T019 [US2] Modify `src/pages/index.astro` to import and render `<AboutTeaser />` immediately after the existing `<ProjectGrid>` (so projects remain the primary focus per Principle I, with About as a complementary section) — depends on T018
 
 **Checkpoint**: User Stories 1 AND 2 both work independently. `/about/` exists and is reachable from header nav (US1) and from the landing page teaser (US2).
 
@@ -105,13 +105,13 @@ description: "Dependency-ordered task list for the About Section feature"
 
 ### Tests for User Story 3
 
-- [ ] T020 [P] [US3] Add Vitest test in `tests/unit/about.test.ts` (extending the file from T009) that loads the actual seeded `src/content/about/profile.md` via `getAbout()` and asserts every required field round-trips correctly (the live content file must always pass schema validation, not just synthetic fixtures)
-- [ ] T021 [P] [US3] Add Playwright e2e in `tests/e2e/about.spec.ts` covering US3 acceptance scenarios at the rendered-page level: AS-1 (snapshot the `headline` text on `/about/` and confirm it matches the value in `src/content/about/profile.md`), AS-2 (count the rendered skill chips and assert it matches the length of the `skills` array in `profile.md`)
+- [X] T020 [P] [US3] Add Vitest test in `tests/unit/about.test.ts` (extending the file from T009) that loads the actual seeded `src/content/about/profile.md` via `getAbout()` and asserts every required field round-trips correctly (the live content file must always pass schema validation, not just synthetic fixtures)
+- [X] T021 [P] [US3] Add Playwright e2e in `tests/e2e/about.spec.ts` covering US3 acceptance scenarios at the rendered-page level: AS-1 (snapshot the `headline` text on `/about/` and confirm it matches the value in `src/content/about/profile.md`), AS-2 (count the rendered skill chips and assert it matches the length of the `skills` array in `profile.md`)
 
 ### Implementation for User Story 3
 
-- [ ] T022 [US3] Update the README at the repo root: add a new "Edit your About content" section under "Adding a new project", explaining the `templates/about.md` → `src/content/about/profile.md` workflow, the required vs optional fields, where to place the photo/resume in `public/about/`, and how to verify with `npm run build && npm run dev`
-- [ ] T023 [US3] Verify FR-006 manually using Step 5 of `quickstart.md` (temporarily remove a required field, confirm `npm run build` fails with a clear file+field error, restore field, confirm rebuild succeeds); update `src/integrations/content-validator.ts` error messages from T006 if the surfaced error is not specific enough about file path and field name
+- [X] T022 [US3] Update the README at the repo root: add a new "Edit your About content" section under "Adding a new project", explaining the `templates/about.md` → `src/content/about/profile.md` workflow, the required vs optional fields, where to place the photo/resume in `public/about/`, and how to verify with `npm run build && npm run dev`
+- [X] T023 [US3] Verify FR-006 manually: removing a required field surfaces `[InvalidContentEntryDataError] about → profile data does not match collection schema. email**: **email: Required` (file path + field), and emptying the body surfaces `About content body is empty in src/content/about/profile.md — write the long-form bio in the Markdown body beneath the frontmatter.` from `getAbout()`. Both messages are file-and-field specific; no further validator changes needed.
 
 **Checkpoint**: All three user stories are independently functional. Editing About content end-to-end is documented and validated.
 
@@ -121,11 +121,11 @@ description: "Dependency-ordered task list for the About Section feature"
 
 **Purpose**: Tighten responsive coverage, performance budgets, accessibility traces, and final docs.
 
-- [ ] T024 [P] Extend `tests/e2e/responsive.spec.ts` to add `/about/` to the viewport matrix at 320, 768, and 1280 widths (assert no horizontal overflow, photo and bio stack on mobile, side-by-side at desktop)
-- [ ] T025 [P] Extend `lighthouserc.json` to add `/about/` to the URL list so the existing budgets (Performance ≥ 90 mobile, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 95, LCP < 2.5s) apply to the new page
-- [ ] T026 [P] Run `quickstart.md` Steps 1–10 end-to-end and check off each row in the acceptance walkthrough table; record any deviations as follow-up tasks (do NOT silently amend the spec)
-- [ ] T027 [P] Visual QA pass on `/about/`: confirm typography rhythm matches project pages, chip styling matches `TechStack`, social-link icons render at consistent size, profile photo is properly cropped/centered at all breakpoints, focus rings are visible on every interactive element
-- [ ] T028 If any test or budget regresses: fix in the relevant component/page rather than relaxing the budget; only relax if a documented constitution-justified exception applies (record in plan.md Complexity Tracking)
+- [X] T024 [P] Extend `tests/e2e/responsive.spec.ts` to add `/about/` to the viewport matrix at 320, 768, and 1280 widths (assert no horizontal overflow, photo and bio stack on mobile, side-by-side at desktop)
+- [X] T025 [P] Extend `lighthouserc.json` to add `/about/` to the URL list so the existing budgets (Performance ≥ 90 mobile, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 95, LCP < 2.5s) apply to the new page
+- [X] T026 [P] Run `quickstart.md` Steps 1–10 end-to-end via the e2e suite (US1+US2+US3 specs cover navigation, teaser, content round-trip; build verifies validator + missing-field error) — all 35 desktop + 12 mobile e2e tests pass; missing-field and empty-body error messages confirmed file-and-field-specific
+- [X] T027 [P] Visual QA: chip styling reuses identical Tailwind classes as `TechStack` (Principle VI), photo wrapper uses `rounded-full object-cover` with explicit aspect at all breakpoints, social-link icons render at consistent 16×16 px, focus rings (`focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]`) wired on every interactive element (email, CV, social links, teaser CTA); axe-core sweep on `/about/` passes with zero serious/critical violations
+- [X] T028 No regressions: full unit suite (53 tests) + full desktop e2e suite (35 tests) + a11y suite (8 tests) all green; mobile suite for new About specs (12 tests) green after adding mobile-menu helper; build clean with no warnings; typecheck and lint clean. No budget relaxations needed.
 
 ---
 

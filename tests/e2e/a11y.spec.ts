@@ -7,6 +7,7 @@ const ROUTES = [
   { path: '/category/startup/', name: 'category-startup' },
   { path: '/category/corporate/', name: 'category-corporate' },
   { path: '/projects/example-personal/', name: 'project-detail' },
+  { path: '/about/', name: 'about' },
   { path: '/404.html', name: '404' },
 ];
 
@@ -29,4 +30,13 @@ test.describe('Accessibility (WCAG 2.1 AA)', () => {
       expect(seriousOrCritical, message).toEqual([]);
     });
   }
+
+  test('about page profile photo has a non-empty alt attribute', async ({ page }) => {
+    await page.goto('/about/');
+    const photo = page.getByRole('img', { name: /portrait of/i });
+    await expect(photo).toBeVisible();
+    const alt = await photo.getAttribute('alt');
+    expect(alt).toBeTruthy();
+    expect((alt ?? '').length).toBeGreaterThan(0);
+  });
 });

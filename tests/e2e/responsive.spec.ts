@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const ROUTES = ['/', '/category/personal/', '/projects/example-startup/'];
+const ROUTES = ['/', '/category/personal/', '/projects/example-startup/', '/about/'];
 
 test.describe('US4: Responsive browsing', () => {
   test.describe('mobile viewport (320px)', () => {
