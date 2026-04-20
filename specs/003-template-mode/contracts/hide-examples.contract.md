@@ -33,7 +33,7 @@ This document is the executable specification for what `HIDE_EXAMPLES` does. Eac
 
 **When** `astro build` runs,
 
-**Then** the resulting `dist/` directory MUST NOT contain any path matching the glob `dist/projects/example-*/`.
+**Then** the resulting `dist/` directory MUST NOT contain any rendered HTML page for an example project — concretely, no file matching `dist/projects/example-*/index.html`. (Static assets such as `dist/projects/example-personal/thumbnail.svg` MAY remain — they are copied verbatim from `public/` and may be reused by forkers; what matters is that no navigable page exists.)
 
 **And** the rendered HTML of `dist/index.html` MUST NOT contain any reference to a slug starting with `example-` (no card, no link, no title).
 

@@ -1,5 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { CATEGORY_KEYS, type CategoryKey } from '../content.config';
+import { hideExamples } from './env';
+import { shouldIncludeProject } from './examples';
 import { sortProjects as sortProjectsPure } from './sort';
 import { withBase } from './url';
 
@@ -14,12 +16,17 @@ export interface ProjectWithMeta {
 
 const isProd = import.meta.env.PROD;
 
-function shouldInclude(entry: ProjectEntry): boolean {
-  return isProd ? !entry.data.draft : true;
-}
-
 function deriveSlug(entry: ProjectEntry): string {
   return entry.data.slug ?? entry.id;
+}
+
+function shouldInclude(entry: ProjectEntry): boolean {
+  return shouldIncludeProject({
+    slug: deriveSlug(entry),
+    isDraft: Boolean(entry.data.draft),
+    isProd,
+    hideExamplesEnabled: hideExamples(),
+  });
 }
 
 function withMeta(entry: ProjectEntry, category: CategoryKey): ProjectWithMeta {

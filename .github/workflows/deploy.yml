@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, content/add-projects]
   workflow_dispatch:
 
 permissions:
@@ -13,6 +13,13 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: false
+
+env:
+  # On `content/add-projects` (the template author's personal-portfolio branch)
+  # examples are always hidden. On any other branch, fall back to the repository
+  # variable `HIDE_EXAMPLES` (set in repo Settings → Secrets and variables →
+  # Actions → Variables), or `false` if that variable is unset.
+  HIDE_EXAMPLES: ${{ github.ref == 'refs/heads/content/add-projects' && 'true' || vars.HIDE_EXAMPLES || 'false' }}
 
 jobs:
   build:
@@ -39,6 +46,7 @@ jobs:
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          HIDE_EXAMPLES: ${{ env.HIDE_EXAMPLES }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

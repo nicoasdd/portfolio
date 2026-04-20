@@ -1,6 +1,7 @@
 import type { AstroIntegration } from 'astro';
-import { readdirSync, statSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, statSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { REQUIRED_EXAMPLES } from '../lib/examples';
 import { assertNoCollisions, type SlugSource } from '../lib/slug';
 import { getMissingImages } from './validator-helpers';
 
@@ -60,6 +61,20 @@ export default function contentValidator(): AstroIntegration {
         const root = process.cwd();
         const sources: SlugSource[] = [];
         const imagePaths: string[] = [];
+
+        const missingExamples = REQUIRED_EXAMPLES.filter(
+          (e) => !existsSync(join(root, e.filePath)),
+        );
+        if (missingExamples.length > 0) {
+          const list = missingExamples.map((e) => `  - ${e.filePath}`).join('\n');
+          console.warn(
+            `[content-validator] Missing required example file(s):\n${list}\n` +
+              `These files double as template examples and end-to-end test fixtures; ` +
+              `the unit suite (tests/unit/examples.test.ts) will fail without them. ` +
+              `See README → "Common Issues" → "Don't delete the example projects". ` +
+              `To hide examples from your published site without deleting them, set HIDE_EXAMPLES=true.`,
+          );
+        }
 
         for (const category of CATEGORIES) {
           const dir = join(root, 'src', 'content', 'projects', category);
