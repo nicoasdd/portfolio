@@ -27,7 +27,7 @@ The template ships with three working **example projects** (one per category) an
 
 4. **Replace the About content.** Open `src/content/about/profile.md`. Fill in `name`, `headline`, `intro`, `email`, `skills`, and the bio body. Drop your photo at the path you reference from `photo:` (e.g. `public/about/profile.webp`). Detailed instructions are in [Edit your About content](#edit-your-about-content) below.
 
-5. **Add your first project.** Copy `templates/project.md` into `src/content/projects/<category>/<slug>.md`, fill in the frontmatter, and drop a thumbnail under `public/projects/<slug>/`. Full walkthrough in [Adding a project](#adding-a-project) below. _If you use Cursor, you can also paste a GitHub repo URL into chat and let the bundled [`add-project-from-repo`](./.cursor/skills/add-project-from-repo/SKILL.md) skill generate the entry for you._
+5. **Add your first project.** Copy `templates/project.md` into `src/content/projects/<category>/<slug>.md`, fill in the frontmatter, and drop a thumbnail under `public/projects/<slug>/`. Full walkthrough in [Adding a project](#adding-a-project) below. _If you use Cursor, you can also paste a GitHub repo URL into chat and let the bundled [`add-project-from-repo`](./.cursor/skills/add-project-from-repo/SKILL.md) skill generate the entry for you. Once you have one or more projects, the bundled [`optimize-project-from-resume`](./.cursor/skills/optimize-project-from-resume/SKILL.md) skill can refresh their narrative copy against your current resume — see [Optimizing project copy with your resume](#optimizing-project-copy-with-your-resume) below._
 
 6. **Push and deploy.**
 
@@ -158,6 +158,81 @@ git push
 ```
 
 The deploy workflow takes over.
+
+---
+
+## Optimizing project copy with your resume
+
+Once you have one or more project entries in `src/content/projects/`, the bundled [`optimize-project-from-resume`](./.cursor/skills/optimize-project-from-resume/SKILL.md) Cursor skill can rewrite their narrative copy to match the seniority, focus areas, and vocabulary of where you are in your career today. Useful when:
+
+- You just changed jobs (or got promoted) and want your portfolio to read consistently from your new vantage point.
+- You wrote some projects years ago in a junior voice that no longer matches the rest of your work.
+- You're tailoring the portfolio for a specific kind of opportunity (platform engineering, product leadership, founder-track, etc.).
+
+### What it does
+
+Given your resume (`.md` or `.pdf`) and either one project or all of them, the skill rewrites every piece of narrative copy in each project file:
+
+- The front-matter `title`, `description`, and `role` fields.
+- Every body section in the file: `## Overview`, `## Highlights`, `## Lessons Learned`, and any custom section.
+
+### What it never touches
+
+The skill is deliberately scoped to *narrative*, not facts:
+
+- **`slug`** — your URLs stay stable. (The example slugs are pinned by tests, too.)
+- **`period`, `techStack`** — historical facts. The rewrite respects them; it never re-dates a project or claims a tech you didn't use.
+- **`thumbnail`, `screenshots[]`, `links.{source,live,caseStudy}`** — asset paths and URLs.
+- **`featured`, `order`, `draft`** — your site curation choices.
+- **Section heading lines and ordering** — preserved verbatim.
+- **Embedded image references, hyperlinks, fenced code blocks, tables, and inline HTML** inside body sections — preserved verbatim. Only the surrounding prose is rewritten.
+
+### Confidentiality guard for `corporate/` and `startup/` projects
+
+The constitution requires that corporate and startup project entries focus on role, impact, and technologies — *not* on proprietary details or NDA-protected names. When you optimize a project under `src/content/projects/{corporate,startup}/`, the skill enforces a stricter rule: the resume contributes only seniority and vocabulary signals. Employer names, customer names, internal product names, and any other proper noun present in the resume but absent from the current project file will *not* be introduced into the rewrite — the skill uses generic descriptors instead ("a major payments processor", not "Stripe").
+
+For `personal/` projects, this guard is off — the personal-portfolio surface is yours to fill.
+
+### Safety net
+
+- **Diff-and-confirm.** Every file write is preceded by a unified diff and an explicit yes/no/skip prompt. There is no auto-approve mode.
+- **Uncommitted-changes guard.** If a target project file has uncommitted local edits, the skill refuses to touch it unless you explicitly opt in. Your manual work is never silently overwritten.
+- **Schema validation.** Every rewritten file is validated against the same Zod schema in [`src/content.config.ts`](./src/content.config.ts) that the build uses. If the rewritten title/description/role would exceed their length limits, the skill self-tightens once and skips on persistent failure.
+- **Idempotency.** Re-running the skill on an already-optimized file with the same resume produces a near-empty diff.
+
+### How to use it
+
+In Cursor chat, invoke it conversationally:
+
+```text
+Optimize src/content/projects/personal/cli-toolkit.md using my resume at /tmp/resume.md
+```
+
+Or, in batch mode against every project under `src/content/projects/`:
+
+```text
+Optimize all my projects with my resume at /tmp/resume.pdf
+```
+
+You can also nudge the optimization with a short guidance string layered on top of the resume signal — useful when you want to lean into a specific theme without editing the resume:
+
+```text
+Optimize all my projects with /tmp/resume.md, emphasize platform engineering
+```
+
+If the guidance contradicts a fact in the resume (e.g., asking the skill to claim a leadership scope your resume doesn't show), the skill surfaces the conflict and refuses to fabricate.
+
+### What you'll see
+
+For each project, the skill prints a status line in the chat:
+
+```text
+✓ src/content/projects/personal/cli-toolkit.md       (-7/+9 lines)
+↷ src/content/projects/personal/raytracer.md         skipped: declined
+✗ src/content/projects/startup/example-startup.md    failed: confidentiality guard tripped (Acme Payments in title)
+```
+
+In batch mode, the skill runs `npm run build` once at the end and reports a final summary `<N> optimized, <M> skipped, <K> failed`.
 
 ---
 
@@ -311,10 +386,13 @@ src/
 templates/project.md                                 # Copy this to add a project
 templates/about.md                                   # Copy this to author the About page
 public/{projects,about}/                             # Static assets
+.cursor/skills/
+├── add-project-from-repo/                           # Generate a project entry from a GitHub repo URL
+└── optimize-project-from-resume/                    # Rewrite project narrative against your current resume
 .github/workflows/                                   # CI + deploy
 tests/{unit,e2e}/                                    # Vitest + Playwright
 docs/dual-branch-workflow.md                         # Author-side dual-branch guide
-specs/{001,002,003}*/                                # Spec, plan, tasks per feature
+specs/{001,002,003,004}*/                            # Spec, plan, tasks per feature
 ```
 
 ---
@@ -326,4 +404,5 @@ This project follows a Spec-Kit driven workflow:
 - [`.specify/memory/constitution.md`](./.specify/memory/constitution.md) — non-negotiable principles (showcase-first, categorization, performance, content-driven, accessible, polished).
 - [`specs/001-portfolio-showcase/`](./specs/001-portfolio-showcase/) — original site spec, plan, tasks.
 - [`specs/002-about-section/`](./specs/002-about-section/) — About section feature.
-- [`specs/003-template-mode/`](./specs/003-template-mode/) — this template-mode feature.
+- [`specs/003-template-mode/`](./specs/003-template-mode/) — template-mode feature.
+- [`specs/004-optimize-project-skill/`](./specs/004-optimize-project-skill/) — the resume-aligned project optimizer skill.

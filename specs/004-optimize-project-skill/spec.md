@@ -9,18 +9,18 @@
 
 ### User Story 1 - Optimize a single project against my current resume (Priority: P1)
 
-As the portfolio owner, I want to point a skill at one of my existing project entries and at my current resume (Markdown or PDF), so the project's narrative copy — description, highlights, and lessons learned — is rewritten to reflect the seniority, focus areas, and vocabulary of where I am in my career today.
+As the portfolio owner, I want to point a skill at one of my existing project entries and at my current resume (Markdown or PDF), so every piece of narrative copy in the project — title, description, role, and the entire body (Overview, Highlights, Lessons Learned, and any other section) — is rewritten to reflect the seniority, focus areas, and vocabulary of where I am in my career today, while the facts, asset paths, and configuration of the project are preserved exactly.
 
 **Why this priority**: This is the core value of the feature and the smallest unit that delivers a tangible improvement. Without it, no other story makes sense. A single optimized project is also the safest way for the user to evaluate the skill's quality before applying it broadly.
 
-**Independent Test**: Provide one project file (e.g. `src/content/projects/personal/example-personal.md`) and a resume file. Run the skill. Verify the project's `description`, `## Highlights`, and `## Lessons Learned` sections have been rewritten to emphasize themes present in the resume (e.g. recent roles, current seniority, dominant technologies), while non-narrative front-matter fields (slug, role, period, techStack, thumbnail, links, featured, order, category) are preserved unchanged.
+**Independent Test**: Provide one project file (e.g. `src/content/projects/personal/example-personal.md`) and a resume file. Run the skill. Verify that all narrative fields and the entire body have been rewritten to emphasize themes present in the resume (recent roles, current seniority, dominant technologies), while every fact / identity / configuration field — `slug`, `period`, `techStack`, `thumbnail`, `screenshots`, `links`, `featured`, `order`, `draft` — is preserved byte-for-byte.
 
 **Acceptance Scenarios**:
 
-1. **Given** an existing project markdown file and a resume in Markdown format, **When** the user invokes the skill with the project path and the resume path, **Then** the project's `description`, `## Highlights`, and `## Lessons Learned` sections are rewritten to align with the career stage and themes inferred from the resume, and all other front-matter fields and section headings are preserved byte-for-byte.
+1. **Given** an existing project markdown file and a resume in Markdown format, **When** the user invokes the skill with the project path and the resume path, **Then** all narrative content is rewritten to align with the career stage and themes inferred from the resume — specifically the front-matter `title`, `description`, and `role` fields, and every body section in the file (`## Overview`, `## Highlights`, `## Lessons Learned`, and any custom sections) — while every other front-matter field is preserved byte-for-byte and the body's section ordering and headings are preserved verbatim.
 2. **Given** an existing project markdown file and a resume in PDF format, **When** the user invokes the skill with the project path and the resume path, **Then** the resume PDF is parsed to text and used as input, and the same optimization is applied as for a Markdown resume.
-3. **Given** the resume indicates a senior/staff-level career stage, **When** the skill rewrites a project that was originally written from a junior perspective, **Then** the rewritten copy uses scope, ownership, and impact language consistent with senior contributions (e.g. "led", "owned", "mentored") rather than learner language (e.g. "learned", "got introduced to").
-4. **Given** the user invokes the skill, **When** the skill produces optimized content, **Then** the user is shown a clear before/after diff and asked to confirm before any file is overwritten.
+3. **Given** the resume indicates a senior/staff-level career stage, **When** the skill rewrites a project that was originally written from a junior perspective, **Then** the rewritten copy uses scope, ownership, and impact language consistent with senior contributions (e.g. "led", "owned", "mentored") rather than learner language (e.g. "learned", "got introduced to") across the title, description, role, and body.
+4. **Given** the user invokes the skill, **When** the skill produces optimized content, **Then** the user is shown a clear before/after diff covering every changed segment and asked to confirm before any file is overwritten.
 
 ---
 
@@ -30,7 +30,7 @@ As the portfolio owner, when I update my resume after a job change or promotion,
 
 **Why this priority**: This is the obvious extension of P1 and is what makes the skill valuable on a recurring basis. It is lower priority because it depends entirely on P1 working well per project, and it can be deferred behind a "do one to learn it, then run all" workflow.
 
-**Independent Test**: Place at least three project files across categories (`personal`, `startup`, `corporate`) and a resume. Run the skill in "all projects" mode. Verify each project file is processed independently, a single combined diff (or one diff per project) is shown, the user can approve, reject, or skip individual projects, and only approved files are written.
+**Independent Test**: Place at least three project files across categories (`personal`, `startup`, `corporate`) and a resume. Run the skill in "all projects" mode. Verify each project file is processed independently, one diff per project covering all narrative changes (title, description, role, full body) is shown, the user can approve, reject, or skip individual projects, and only approved files are written.
 
 **Acceptance Scenarios**:
 
@@ -61,11 +61,13 @@ As the portfolio owner, I want to nudge the skill with a short instruction (e.g.
 - The resume file does not exist or is empty → skill stops with a clear error and does not modify any project.
 - The resume PDF cannot be parsed to readable text (scanned image, encrypted) → skill reports the failure, suggests providing a Markdown version, and stops.
 - A project file's front matter is missing required fields or fails the existing Zod schema validation → skill reports the offending file, skips it, and continues with the rest.
-- A project markdown file is missing one of the target sections (`## Highlights`, `## Lessons Learned`) → skill creates the section in the conventional position rather than rewriting nothing.
-- A project markdown file contains additional sections beyond `## Overview`, `## Highlights`, `## Lessons Learned` → those extra sections are preserved verbatim.
+- A project markdown file is missing the conventional `## Highlights` or `## Lessons Learned` sections → skill creates them in the conventional position (after `## Overview`, or at end of body if no `## Overview`) rather than rewriting nothing. `## Overview` itself is rewritten when present and created when absent.
+- A project markdown file contains additional sections beyond the conventional ones (e.g. `## Demo`, `## Architecture`, `## Credits`) → those sections are rewritten with the same career-stage signals as the rest of the body, while their headings, ordering, and any embedded structures (lists, code blocks, tables, images) are preserved.
+- A rewritten title would exceed the schema limit (≤80 chars), description (≤240 chars), or role (≤80 chars) → skill tightens the offending field automatically; if it still cannot fit, it skips the project with a clear schema-failure message.
 - The resume implies a career stage that conflicts with the project's recorded `period` (e.g. resume says "Staff Engineer since 2024" but the project ran in 2018 when the user was a junior) → the optimization respects the project's historical context (writes as the person the user was at the time, not as today's self) while using today's language quality and clarity.
 - The user runs the skill on the same project repeatedly → each run is idempotent in spirit (does not progressively drift), and the diff against the previous run is small unless the resume or guidance changed.
 - The user has uncommitted changes to a project file → skill warns and refuses to overwrite without explicit confirmation, to avoid clobbering manual edits.
+- The project file references images, links, or code fences inside body sections → image references, hyperlinks, and fenced code blocks are preserved verbatim; only the surrounding prose may be rewritten.
 
 ## Requirements *(mandatory)*
 
@@ -74,17 +76,18 @@ As the portfolio owner, I want to nudge the skill with a short instruction (e.g.
 - **FR-001**: The skill MUST accept a resume file path as input and support both Markdown (`.md`) and PDF (`.pdf`) formats.
 - **FR-002**: The skill MUST accept either (a) a single project identifier — a path under `src/content/projects/` or a project slug — or (b) no project identifier, in which case it operates on every project file under `src/content/projects/**/*.md`.
 - **FR-003**: The skill MUST extract from the resume the user's current career stage (e.g. junior, mid, senior, staff, principal, founder), recent role themes, and dominant technologies, and use these as the primary steering signals for rewriting.
-- **FR-004**: The skill MUST rewrite, for each targeted project, the front-matter `description` field and the body sections titled `## Highlights` and `## Lessons Learned`.
-- **FR-005**: The skill MUST preserve, byte-for-byte, all other front-matter fields (including but not limited to `title`, `role`, `period`, `techStack`, `thumbnail`, `links`, `featured`, `order`) and all body sections other than `## Highlights` and `## Lessons Learned` — including any `## Overview` section.
-- **FR-006**: The rewritten content MUST remain consistent with the project's existing factual front matter (role, period, techStack) and MUST NOT invent technologies, employers, dates, or outcomes that are not already present in either the project file or the resume.
-- **FR-007**: When rewriting a historical project (project `period.end` predates the resume's current role), the skill MUST write the project's narrative from the perspective the user held at that time (informed by the resume's history), not from today's perspective.
-- **FR-008**: The skill MUST present a before/after diff to the user for each project and require explicit confirmation before writing any file to disk.
+- **FR-004**: The skill MUST rewrite, for each targeted project, every piece of narrative content in the file — specifically: (a) the front-matter `title`, `description`, and `role` fields, and (b) every body section in the file, including `## Overview`, `## Highlights`, `## Lessons Learned`, and any other section the file contains.
+- **FR-005**: The skill MUST preserve, byte-for-byte, every fact / identity / configuration value in the file: the front-matter `slug`, `period`, `techStack`, `thumbnail`, `screenshots`, `links`, `featured`, `order`, and `draft` fields; the front-matter block delimiters and key ordering; the body's section ordering and exact heading lines; and any embedded content inside body sections that is not free-form prose — image references (`![](...)`), hyperlinks (`[text](url)`), fenced code blocks (` ``` `), tables, and inline HTML.
+- **FR-006**: The rewritten content MUST remain consistent with the project's preserved factual front matter (`role` is rewritten only in vocabulary/register, not to claim a different scope than `period`, `techStack`, and the project's category imply) and MUST NOT invent technologies, employers, dates, customers, or outcomes that are not already present in either the project file or the resume.
+- **FR-007**: When rewriting a historical project (project `period.end` predates the resume's current role), the skill MUST write the project's narrative — across title, description, role, and every body section — from the perspective the user held at that time (informed by the resume's history), not from today's perspective.
+- **FR-008**: The skill MUST present a before/after diff to the user for each project, covering every changed segment (front-matter and body), and require explicit confirmation before writing any file to disk.
 - **FR-009**: When operating on multiple projects, the skill MUST process them sequentially, report a per-project status (success, skipped, failed with reason), and continue past individual failures.
 - **FR-010**: The skill MUST validate each rewritten project against the existing project content-collection schema before writing, and refuse to write any file that would fail validation.
 - **FR-011**: The skill MUST refuse to overwrite a project file that has uncommitted local changes unless the user explicitly opts in to the overwrite.
 - **FR-012**: The skill MUST be idempotent in effect — running it twice in a row on the same project with the same resume MUST NOT produce materially different output on the second run.
 - **FR-013**: The skill MUST emit a final summary listing which project files were modified, which were skipped, and which failed, with one line per project.
 - **FR-014**: The skill MUST surface, but not silently resolve, any factual conflict between the resume and an optional guidance string provided by the user (e.g. claimed leadership scope vs. resume role).
+- **FR-015**: The skill MUST NOT change a project's URL identity or any asset references — `slug`, `thumbnail`, `screenshots[]`, and `links.{source,live,caseStudy}` are immutable for this skill, because changing them would break URLs, broken-link checks, the existing test fixtures pinned to specific slugs (`example-personal`, `example-startup`, `example-corporate`), and any external bookmarks to project pages.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -112,5 +115,6 @@ As the portfolio owner, I want to nudge the skill with a short instruction (e.g.
 - PDF resumes are text-based (i.e. produced from a word processor or LaTeX), not scanned images. Scanned PDFs are out of scope and will be reported as a failure with guidance to provide a Markdown version.
 - Career-stage labels are coarse-grained (e.g. junior / mid / senior / staff / principal / founder); fine-grained title taxonomies are out of scope for v1.
 - The skill writes back into the same project files in place. Producing alternate output paths, branches, or PR drafts is out of scope for v1; git history is the user's safety net (combined with the uncommitted-changes guard in FR-011).
-- The skill operates on Markdown content only — it does not touch project thumbnails, screenshots, or any asset under `public/projects/`.
-- Existing tests under `tests/unit/` (notably `schema.test.ts` and `projects.test.ts`) continue to pass; the skill must produce files that satisfy the same invariants those tests already enforce.
+- The skill operates on Markdown content only — it does not touch project thumbnails, screenshots, or any asset under `public/projects/`. Asset references (`thumbnail`, `screenshots[]`) are preserved verbatim; the skill never renames, moves, or regenerates assets.
+- "Optimize everything" means *every narrative segment* of the project file. It deliberately does NOT mean *every field*: `slug` (URL identity), `period` (historical fact), `techStack` (historical fact), `thumbnail`/`screenshots` (asset paths), `links` (URLs), and `featured`/`order`/`draft` (owner-controlled configuration) are immutable for this skill. See FR-015 for the rationale.
+- Existing tests under `tests/unit/` (notably `schema.test.ts` and `projects.test.ts`) continue to pass; the skill must produce files that satisfy the same invariants those tests already enforce. The schema's tighter limits (`title` ≤80, `description` ≤240, `role` ≤80) bound how aggressively the skill can rewrite those fields; the skill self-tightens to fit and skips with a clear message if it cannot.
