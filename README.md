@@ -27,7 +27,7 @@ The template ships with three working **example projects** (one per category) an
 
 4. **Replace the About content.** Open `src/content/about/profile.md`. Fill in `name`, `headline`, `intro`, `email`, `skills`, and the bio body. Drop your photo at the path you reference from `photo:` (e.g. `public/about/profile.webp`). Detailed instructions are in [Edit your About content](#edit-your-about-content) below.
 
-5. **Add your first project.** Copy `templates/project.md` into `src/content/projects/<category>/<slug>.md`, fill in the frontmatter, and drop a thumbnail under `public/projects/<slug>/`. Full walkthrough in [Adding a project](#adding-a-project) below.
+5. **Add your first project.** Copy `templates/project.md` into `src/content/projects/<category>/<slug>.md`, fill in the frontmatter, and drop a thumbnail under `public/projects/<slug>/`. Full walkthrough in [Adding a project](#adding-a-project) below. _If you use Cursor, you can also paste a GitHub repo URL into chat and let the bundled [`add-project-from-repo`](./.cursor/skills/add-project-from-repo/SKILL.md) skill generate the entry for you._
 
 6. **Push and deploy.**
 
@@ -107,6 +107,8 @@ HIDE_EXAMPLES=true npm run build && npm run preview
 ## Adding a project
 
 Adding a project takes **one Markdown file** — no code changes.
+
+> **Shortcut for Cursor users:** if you have a GitHub repo URL handy, the bundled [`add-project-from-repo`](./.cursor/skills/add-project-from-repo/SKILL.md) Cursor skill will clone the repo into a temp directory, infer the title / description / period / tech stack from its README and manifests, and emit a schema-compliant Markdown file under `src/content/projects/<category>/<slug>.md` plus a placeholder thumbnail at `public/projects/<slug>/thumbnail.svg` — for one repo or a batch. Just paste the URL(s) into chat and ask Cursor to add them. The manual flow below still works and is the source of truth for what each frontmatter field means.
 
 ### 1. Copy the template
 
