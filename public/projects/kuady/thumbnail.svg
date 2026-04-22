@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g transform="translate(260 160)">
+    <rect width="280" height="180" rx="20" fill="url(#card)" stroke="#0ea5e9" stroke-width="3"/>
+    <rect x="24" y="32" width="60" height="44" rx="6" fill="#fde68a" opacity="0.9"/>
+    <rect x="24" y="100" width="180" height="10" rx="5" fill="#ffffff" opacity="0.85"/>
+    <rect x="24" y="124" width="120" height="10" rx="5" fill="#ffffff" opacity="0.6"/>
+  </g>
+  <g transform="translate(540 360)">
+    <rect width="120" height="200" rx="22" fill="#0b1224" stroke="#38bdf8" stroke-width="3"/>
+    <rect x="14" y="20" width="92" height="140" rx="8" fill="#1e293b"/>
+    <circle cx="60" cy="180" r="6" fill="#38bdf8"/>
+  </g>
+  <text x="400" y="500" text-anchor="middle" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="48" font-weight="700">Kuady</text>
+  <text x="400" y="544" text-anchor="middle" fill="#cbd5f5" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="500">Mobile-first digital wallet</text>
+</svg>
