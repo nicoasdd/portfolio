@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0f1a"/>
+      <stop offset="0.5" stop-color="#7f1d1d"/>
+      <stop offset="1" stop-color="#f87171"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <g transform="translate(400 280)" fill="none" stroke="#fee2e2" stroke-width="2.5">
+    <rect x="-260" y="-150" width="520" height="300" rx="18" fill="#0f172a"/>
+    <line x1="-260" y1="-100" x2="260" y2="-100"/>
+    <text x="-240" y="-118" fill="#fde68a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="800">SWISS APPOINTMENTS</text>
+    <g transform="translate(-180 -40)" fill="#fee2e2" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18">
+      <rect x="-40" y="-30" width="80" height="60" rx="8" fill="#dc2626" stroke="none"/>
+      <text x="0" y="8" text-anchor="middle" fill="#fee2e2" font-weight="800" font-size="42">+</text>
+    </g>
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#a5f3fc" font-size="18">
+      <text x="-100" y="-50">Mon  09:00   AVAILABLE</text>
+      <text x="-100" y="-25">Mon  10:30   booked</text>
+      <text x="-100" y="0">Tue  11:15   AVAILABLE</text>
+      <text x="-100" y="25">Wed  14:00   booked</text>
+      <text x="-100" y="50">Thu  16:45   AVAILABLE</text>
+    </g>
+    <rect x="-100" y="80" width="200" height="42" rx="8" fill="#22d3ee"/>
+    <text x="0" y="108" text-anchor="middle" fill="#0f172a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="800">NOTIFY ON TELEGRAM</text>
+  </g>
+  <text x="400" y="500" text-anchor="middle" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="40" font-weight="700">Swiss Medicine Appointment</text>
+  <text x="400" y="540" text-anchor="middle" fill="#fee2e2" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="500" opacity="0.85">NestJS &#183; Telegram &#183; TOTP &#183; Cron</text>
+</svg>

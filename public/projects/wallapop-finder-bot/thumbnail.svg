@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0ea5e9"/>
+      <stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <g fill="#ffffff">
+    <path d="M170 180 h360 a30 30 0 0 1 30 30 v180 a30 30 0 0 1 -30 30 h-260 l-90 70 v-70 h-10 a30 30 0 0 1 -30 -30 v-180 a30 30 0 0 1 30 -30 z" opacity="0.95"/>
+    <g fill="#0d9488">
+      <circle cx="270" cy="300" r="14"/>
+      <circle cx="350" cy="300" r="14"/>
+      <circle cx="430" cy="300" r="14"/>
+    </g>
+  </g>
+  <g transform="translate(520 360)" fill="#fde047" stroke="#92400e" stroke-width="6" stroke-linejoin="round">
+    <path d="M0 0 l140 0 l60 60 l-140 140 l-60 -60 z"/>
+    <circle cx="30" cy="30" r="14" fill="#ffffff"/>
+  </g>
+  <text x="400" y="540" text-anchor="middle" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="44" font-weight="700">Wallapop Finder Bot</text>
+</svg>

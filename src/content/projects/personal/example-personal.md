@@ -12,7 +12,7 @@ techStack:
 thumbnail: "/projects/example-personal/thumbnail.svg"
 links:
   source: "https://github.com/your-username/cli-toolkit"
-featured: true
+featured: false
 order: 10
 ---
 

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0f1a"/>
+      <stop offset="0.5" stop-color="#0c4a6e"/>
+      <stop offset="1" stop-color="#38bdf8"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <g transform="translate(400 280)" font-family="ui-sans-serif, system-ui, sans-serif" font-weight="700" font-size="22">
+    <g fill="none" stroke="#bae6fd" stroke-width="2">
+      <rect x="-260" y="-40" width="160" height="80" rx="10" fill="#0c4a6e"/>
+      <rect x="100" y="-40" width="160" height="80" rx="10" fill="#0c4a6e"/>
+      <rect x="-80" y="-40" width="160" height="80" rx="10" fill="#0369a1"/>
+    </g>
+    <g fill="#bae6fd" text-anchor="middle">
+      <text x="-180" y="10">WOO</text>
+      <text x="0" y="10">SYNC</text>
+      <text x="180" y="10">MELI</text>
+    </g>
+    <g stroke="#fde68a" stroke-width="2" fill="none" marker-end="url(#a)">
+      <path d="M -100 0 L -82 0"/>
+      <path d="M 80 0 L 98 0"/>
+    </g>
+    <g stroke="#fde68a" stroke-width="2" fill="none" stroke-dasharray="5 5">
+      <path d="M -100 -10 Q 0 -80 100 -10"/>
+      <path d="M 100 10 Q 0 80 -100 10"/>
+    </g>
+  </g>
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#fde68a"/>
+    </marker>
+  </defs>
+  <text x="400" y="500" text-anchor="middle" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="44" font-weight="700">Stock Handler</text>
+  <text x="400" y="540" text-anchor="middle" fill="#bae6fd" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="500" opacity="0.85">WooCommerce &#183; MercadoLibre &#183; Telegram</text>
+</svg>

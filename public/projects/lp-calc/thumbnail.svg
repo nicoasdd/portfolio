@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0f1a"/>
+      <stop offset="0.5" stop-color="#7c2d12"/>
+      <stop offset="1" stop-color="#facc15"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <g transform="translate(400 280)" fill="none" stroke="#fde68a" stroke-width="3">
+    <circle cx="-60" cy="0" r="80" fill="#fbbf24" opacity="0.9"/>
+    <circle cx="60" cy="0" r="80" fill="#0891b2" opacity="0.9"/>
+    <circle cx="-60" cy="0" r="80" stroke="#fde68a"/>
+    <circle cx="60" cy="0" r="80" stroke="#67e8f9"/>
+  </g>
+  <g transform="translate(400 280)" fill="#0b0f1a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="30" font-weight="800" text-anchor="middle">
+    <text x="-60" y="10">A</text>
+    <text x="60" y="10">B</text>
+  </g>
+  <g transform="translate(400 280)" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="20" fill="#fde68a" text-anchor="middle">
+    <text y="130">$ 12 345.67</text>
+  </g>
+  <text x="400" y="500" text-anchor="middle" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="44" font-weight="700">LP Calc</text>
+  <text x="400" y="540" text-anchor="middle" fill="#fde68a" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="500" opacity="0.85">React &#183; Web3 &#183; BSC</text>
+</svg>

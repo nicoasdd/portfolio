@@ -14,7 +14,7 @@ techStack:
 thumbnail: "/projects/example-startup/thumbnail.svg"
 links:
   caseStudy: "https://example.com/case-study"
-featured: true
+featured: false
 order: 10
 ---
 
