@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <radialGradient id="g" cx="0.5" cy="0.4" r="0.75">
+      <stop offset="0" stop-color="#0e7490"/>
+      <stop offset="1" stop-color="#082f49"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <g transform="translate(400 270)">
+    <ellipse rx="190" ry="120" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="6"/>
+    <circle r="78" fill="#0ea5e9" stroke="#0c4a6e" stroke-width="6"/>
+    <circle r="32" fill="#0c4a6e"/>
+    <circle cx="-20" cy="-22" r="14" fill="#e0f2fe"/>
+  </g>
+  <g transform="translate(400 470)" fill="none" stroke="#7dd3fc" stroke-width="6" stroke-linecap="round">
+    <line x1="-150" y1="0" x2="-90" y2="0"/>
+    <line x1="-60" y1="0" x2="60" y2="0"/>
+    <line x1="90" y1="0" x2="150" y2="0"/>
+  </g>
+  <text x="400" y="555" text-anchor="middle" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="38" font-weight="700">Doctor Contact Lens</text>
+</svg>
