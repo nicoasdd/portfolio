@@ -1,0 +1,54 @@
+---
+import CornerFrame from './CornerFrame.astro';
+
+interface Props {
+  label: string;
+  value: string;
+  unit?: string;
+}
+
+const { label, value, unit } = Astro.props;
+---
+
+<CornerFrame padding="md" class="bp-metric-tile">
+  <div class="bp-metric-tile__value">{value}</div>
+  {unit && <div class="bp-metric-tile__unit">{unit}</div>}
+  <div class="bp-metric-tile__label">{label}</div>
+</CornerFrame>
+
+<style>
+  .bp-metric-tile {
+    text-align: center;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .bp-metric-tile__value {
+    font-family: var(--font-bp-sans);
+    font-size: var(--text-bp-3xl);
+    font-weight: 700;
+    color: var(--bp-text);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .bp-metric-tile__unit {
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    color: var(--bp-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 0.25rem;
+  }
+
+  .bp-metric-tile__label {
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    color: var(--bp-text-mut);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 0.75rem;
+  }
+</style>

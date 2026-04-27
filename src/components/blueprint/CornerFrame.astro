@@ -1,0 +1,120 @@
+---
+interface Props {
+  padding?: 'sm' | 'md' | 'lg' | 'none';
+  as?: 'div' | 'section' | 'article' | 'figure' | 'header';
+  class?: string;
+  tone?: 'line' | 'soft';
+}
+
+const props = Astro.props as Props;
+const padding = props.padding ?? 'md';
+const Tag = props.as ?? 'div';
+const className = props.class ?? '';
+const tone = props.tone ?? 'line';
+
+const paddingMap: Record<'none' | 'sm' | 'md' | 'lg', string> = {
+  none: 'p-0',
+  sm: 'p-3',
+  md: 'p-4 md:p-5',
+  lg: 'p-5 md:p-8',
+};
+const paddingClass = paddingMap[padding];
+
+const borderColor = tone === 'soft' ? 'var(--bp-line-soft)' : 'var(--bp-line)';
+const tickColor = tone === 'soft' ? 'var(--bp-line)' : 'var(--bp-accent)';
+---
+
+<Tag
+  class:list={['bp-corner-frame relative', paddingClass, className]}
+  style={`--bp-cf-border:${borderColor};--bp-cf-tick:${tickColor};`}
+>
+  <span class="bp-corner-frame__tick bp-corner-frame__tick--tl" aria-hidden="true"></span>
+  <span class="bp-corner-frame__tick bp-corner-frame__tick--tr" aria-hidden="true"></span>
+  <span class="bp-corner-frame__tick bp-corner-frame__tick--bl" aria-hidden="true"></span>
+  <span class="bp-corner-frame__tick bp-corner-frame__tick--br" aria-hidden="true"></span>
+  <slot />
+</Tag>
+
+<style>
+  .bp-corner-frame {
+    border: 1px solid var(--bp-cf-border);
+    border-radius: 12px;
+    background-color: color-mix(in srgb, var(--bp-surface) 80%, transparent);
+  }
+
+  .bp-corner-frame__tick {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+  }
+
+  .bp-corner-frame__tick::before,
+  .bp-corner-frame__tick::after {
+    content: '';
+    position: absolute;
+    background: var(--bp-cf-tick);
+  }
+
+  .bp-corner-frame__tick::before {
+    width: 10px;
+    height: 2px;
+  }
+
+  .bp-corner-frame__tick::after {
+    width: 2px;
+    height: 10px;
+  }
+
+  .bp-corner-frame__tick--tl {
+    top: -1px;
+    left: -1px;
+  }
+  .bp-corner-frame__tick--tl::before {
+    top: 0;
+    left: 0;
+  }
+  .bp-corner-frame__tick--tl::after {
+    top: 0;
+    left: 0;
+  }
+
+  .bp-corner-frame__tick--tr {
+    top: -1px;
+    right: -1px;
+  }
+  .bp-corner-frame__tick--tr::before {
+    top: 0;
+    right: 0;
+  }
+  .bp-corner-frame__tick--tr::after {
+    top: 0;
+    right: 0;
+  }
+
+  .bp-corner-frame__tick--bl {
+    bottom: -1px;
+    left: -1px;
+  }
+  .bp-corner-frame__tick--bl::before {
+    bottom: 0;
+    left: 0;
+  }
+  .bp-corner-frame__tick--bl::after {
+    bottom: 0;
+    left: 0;
+  }
+
+  .bp-corner-frame__tick--br {
+    bottom: -1px;
+    right: -1px;
+  }
+  .bp-corner-frame__tick--br::before {
+    bottom: 0;
+    right: 0;
+  }
+  .bp-corner-frame__tick--br::after {
+    bottom: 0;
+    right: 0;
+  }
+</style>

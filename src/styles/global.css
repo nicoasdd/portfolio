@@ -1,39 +1,121 @@
 @import 'tailwindcss';
 
+/*
+  Blueprint Portfolio Redesign — design tokens.
+  Static primitives in @theme (Tailwind 4 generates utilities).
+  Theme-variant color tokens are plain CSS custom properties
+  under :root[data-theme="dark"|"light"] so runtime swaps are a
+  single attribute flip on <html>.
+  See specs/005-blueprint-redesign/contracts/design-tokens.md
+*/
+
 @theme {
-  --color-bg: #ffffff;
-  --color-bg-subtle: #f7f7f9;
-  --color-surface: #ffffff;
-  --color-text: #14141a;
-  --color-text-muted: #52525b;
-  --color-accent: #6d28d9;
-  --color-accent-hover: #5b21b6;
-  --color-border: #e4e4e7;
+  --font-bp-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-bp-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-  --color-cat-personal: #2563eb;
-  --color-cat-startup: #db2777;
-  --color-cat-corporate: #047857;
+  --font-display: var(--font-bp-sans);
+  --font-body: var(--font-bp-sans);
+  --font-mono: var(--font-bp-mono);
 
-  --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --text-bp-xs: 0.75rem;
+  --text-bp-sm: 0.875rem;
+  --text-bp-base: 1rem;
+  --text-bp-lg: 1.125rem;
+  --text-bp-xl: 1.25rem;
+  --text-bp-2xl: 1.5rem;
+  --text-bp-3xl: 1.875rem;
+  --text-bp-hero: clamp(2.5rem, 5vw + 1rem, 4.5rem);
 
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
+  --text-xs: var(--text-bp-xs);
+  --text-sm: var(--text-bp-sm);
+  --text-base: var(--text-bp-base);
+  --text-lg: var(--text-bp-lg);
+  --text-xl: var(--text-bp-xl);
+  --text-2xl: var(--text-bp-2xl);
+  --text-3xl: var(--text-bp-3xl);
   --text-4xl: 2.25rem;
   --text-5xl: 3rem;
-  --text-6xl: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  --text-6xl: var(--text-bp-hero);
+
+  --spacing-bp-1: 0.5rem;
+  --spacing-bp-2: 1rem;
+  --spacing-bp-3: 1.5rem;
+  --spacing-bp-4: 2rem;
+  --spacing-bp-5: 3rem;
+  --spacing-bp-6: 4rem;
+  --spacing-bp-7: 6rem;
+
+  --radius-bp-sm: 4px;
+  --radius-bp-md: 8px;
+  --radius-bp-lg: 12px;
+  --radius-bp-xl: 20px;
 
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
+  --breakpoint-2xl: 1440px;
+
+  --color-bp-canvas: var(--bp-canvas);
+  --color-bp-surface: var(--bp-surface);
+  --color-bp-surface-raised: var(--bp-surface-raised);
+  --color-bp-text: var(--bp-text);
+  --color-bp-text-mut: var(--bp-text-mut);
+  --color-bp-line: var(--bp-line);
+  --color-bp-line-soft: var(--bp-line-soft);
+  --color-bp-accent: var(--bp-accent);
+  --color-bp-accent-hover: var(--bp-accent-hover);
+  --color-bp-accent-contrast: var(--bp-accent-contrast);
+  --color-bp-focus: var(--bp-focus);
+  --color-bp-grid: var(--bp-grid);
+  --color-bp-danger: var(--bp-danger);
+
+  --color-bg: var(--bp-canvas);
+  --color-bg-subtle: var(--bp-surface);
+  --color-surface: var(--bp-surface);
+  --color-text: var(--bp-text);
+  --color-text-muted: var(--bp-text-mut);
+  --color-accent: var(--bp-accent);
+  --color-accent-hover: var(--bp-accent-hover);
+  --color-border: var(--bp-line);
+
+  --color-cat-personal: var(--bp-accent);
+  --color-cat-startup: var(--bp-accent);
+  --color-cat-corporate: var(--bp-accent);
+}
+
+:root[data-theme='dark'] {
+  --bp-canvas: #0b1326;
+  --bp-surface: #0f1a33;
+  --bp-surface-raised: #132246;
+  --bp-text: #e6f0ff;
+  --bp-text-mut: #9ab0d6;
+  --bp-line: rgba(34, 211, 238, 0.4);
+  --bp-line-soft: rgba(34, 211, 238, 0.18);
+  --bp-accent: #22d3ee;
+  --bp-accent-hover: #67e8f9;
+  --bp-accent-contrast: #0b1326;
+  --bp-focus: #22d3ee;
+  --bp-grid: rgba(34, 211, 238, 0.08);
+  --bp-danger: #fb7185;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bp-canvas: #f2f5fb;
+  --bp-surface: #ffffff;
+  --bp-surface-raised: #f8fafc;
+  --bp-text: #0b1326;
+  --bp-text-mut: #475569;
+  --bp-line: rgba(14, 116, 144, 0.4);
+  --bp-line-soft: rgba(14, 116, 144, 0.18);
+  --bp-accent: #0891b2;
+  --bp-accent-hover: #0e7490;
+  --bp-accent-contrast: #ffffff;
+  --bp-focus: #0e7490;
+  --bp-grid: rgba(14, 116, 144, 0.08);
+  --bp-danger: #be123c;
+  color-scheme: light;
 }
 
 @layer base {
@@ -51,30 +133,34 @@
   }
 
   body {
-    font-family: var(--font-body);
-    background-color: var(--color-bg);
-    color: var(--color-text);
+    font-family: var(--font-bp-sans);
+    background-color: var(--bp-canvas);
+    color: var(--bp-text);
     line-height: 1.6;
     margin: 0;
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
+    font-family: var(--font-bp-sans);
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: -0.01em;
+    color: var(--bp-text);
   }
 
   a {
-    color: var(--color-accent);
+    color: var(--bp-accent);
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
   }
 
-  a:hover { color: var(--color-accent-hover); }
+  a:hover {
+    color: var(--bp-accent-hover);
+  }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--bp-focus);
     outline-offset: 2px;
     border-radius: 2px;
   }
@@ -84,6 +170,11 @@
     height: auto;
     display: block;
   }
+
+  ::selection {
+    background-color: var(--bp-accent);
+    color: var(--bp-accent-contrast);
+  }
 }
 
 @layer components {
@@ -91,28 +182,207 @@
     position: absolute;
     top: -40px;
     left: 0;
-    background: var(--color-accent);
-    color: #ffffff;
+    background: var(--bp-accent);
+    color: var(--bp-accent-contrast);
     padding: 0.5rem 1rem;
     z-index: 100;
     text-decoration: none;
     border-radius: 0 0 4px 0;
+    font-weight: 600;
   }
 
   .skip-link:focus {
     top: 0;
-    color: #ffffff;
+    color: var(--bp-accent-contrast);
   }
 
   .container-narrow {
     width: 100%;
-    max-width: 72rem;
+    max-width: 1440px;
     margin-inline: auto;
     padding-inline: 1rem;
   }
 
   @media (min-width: 768px) {
-    .container-narrow { padding-inline: 2rem; }
+    .container-narrow {
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-narrow {
+      padding-inline: 3rem;
+    }
+  }
+
+  /* Faint blueprint grid background — opt-in via .bp-grid-bg on <body>. */
+  .bp-grid-bg {
+    background-image:
+      linear-gradient(to right, var(--bp-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--bp-grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-attachment: fixed;
+  }
+
+  .bp-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--bp-accent);
+  }
+
+  .bp-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 1.5rem;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .bp-prose {
+    color: var(--bp-text);
+    max-width: 65ch;
+  }
+
+  .bp-prose h2 {
+    font-size: var(--text-bp-3xl);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .bp-prose h3 {
+    font-size: var(--text-bp-2xl);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .bp-prose h4 {
+    font-size: var(--text-bp-xl);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .bp-prose p {
+    margin: 1rem 0;
+    line-height: 1.7;
+  }
+
+  .bp-prose ul,
+  .bp-prose ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .bp-prose ul {
+    list-style: none;
+  }
+
+  .bp-prose ul > li {
+    position: relative;
+    padding-left: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .bp-prose ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 0.5rem;
+    height: 1px;
+    background: var(--bp-accent);
+  }
+
+  .bp-prose ol {
+    list-style: decimal;
+  }
+
+  .bp-prose ol > li {
+    margin: 0.5rem 0;
+  }
+
+  .bp-prose a {
+    color: var(--bp-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .bp-prose a:hover {
+    color: var(--bp-accent-hover);
+  }
+
+  .bp-prose code {
+    font-family: var(--font-bp-mono);
+    font-size: 0.9em;
+    background: var(--bp-surface-raised);
+    border: 1px solid var(--bp-line-soft);
+    border-radius: var(--radius-bp-sm);
+    padding: 0.1em 0.35em;
+    color: var(--bp-text);
+  }
+
+  .bp-prose pre {
+    font-family: var(--font-bp-mono);
+    background: var(--bp-surface-raised);
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-md);
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-size: var(--text-bp-sm);
+    line-height: 1.6;
+  }
+
+  .bp-prose pre code {
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+
+  .bp-prose blockquote {
+    border-left: 2px solid var(--bp-accent);
+    padding: 0.25rem 0 0.25rem 1rem;
+    margin: 1.5rem 0;
+    color: var(--bp-text-mut);
+    font-style: italic;
+  }
+
+  .bp-prose table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5rem 0;
+    font-size: var(--text-bp-sm);
+  }
+
+  .bp-prose th,
+  .bp-prose td {
+    border: 1px solid var(--bp-line-soft);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+
+  .bp-prose th {
+    background: var(--bp-surface-raised);
+    color: var(--bp-accent);
+    text-transform: uppercase;
+    font-size: var(--text-bp-xs);
+    letter-spacing: 0.08em;
+  }
+
+  .bp-prose hr {
+    border: 0;
+    border-top: 1px dashed var(--bp-line);
+    margin: 2rem 0;
+  }
+
+  .bp-prose img {
+    border-radius: var(--radius-bp-md);
+    border: 1px solid var(--bp-line);
   }
 }
 

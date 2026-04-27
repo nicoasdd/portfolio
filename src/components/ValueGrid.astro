@@ -1,0 +1,94 @@
+---
+import Icons from './blueprint/Icons.astro';
+import CornerFrame from './blueprint/CornerFrame.astro';
+import type { ValueCard } from '../content.config';
+
+interface Props {
+  values: ValueCard[];
+}
+
+const { values } = Astro.props;
+---
+
+{values.length > 0 && (
+  <section class="bp-value-grid" aria-labelledby="bp-values-heading">
+    <h2 id="bp-values-heading" class="bp-eyebrow">What I care about</h2>
+    <ul role="list" class="bp-value-grid__list">
+      {values.map((v) => (
+        <li role="listitem">
+          <CornerFrame padding="md" class="bp-value-card">
+            <div class="bp-value-card__icon" aria-hidden="true">
+              <Icons name={v.icon} size={28} />
+            </div>
+            <h3 class="bp-value-card__title">{v.title}</h3>
+            <p class="bp-value-card__body">{v.body}</p>
+          </CornerFrame>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  .bp-value-grid {
+    margin-top: 3rem;
+  }
+
+  .bp-value-grid .bp-eyebrow {
+    display: block;
+    margin-bottom: 1.25rem;
+  }
+
+  .bp-value-grid__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .bp-value-grid__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .bp-value-grid__list {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .bp-value-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .bp-value-card__icon {
+    display: flex;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto;
+    border: 1px solid var(--bp-line);
+    border-radius: 50%;
+    align-items: center;
+    color: var(--bp-accent);
+  }
+
+  .bp-value-card__title {
+    margin: 0.5rem 0 0.25rem;
+    font-size: var(--text-bp-xl);
+  }
+
+  .bp-value-card__body {
+    margin: 0;
+    font-size: var(--text-bp-sm);
+    color: var(--bp-text-mut);
+    line-height: 1.55;
+  }
+</style>

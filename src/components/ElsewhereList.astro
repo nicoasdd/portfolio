@@ -1,0 +1,138 @@
+---
+import Icons from './blueprint/Icons.astro';
+import type { ResolvedContact } from '../lib/about';
+
+interface Props {
+  contact: ResolvedContact;
+  extraLinks?: Array<{ label: string; url: string; icon?: string }>;
+}
+
+const { contact, extraLinks = [] } = Astro.props;
+
+function host(url: string): string {
+  try {
+    const u = new URL(url);
+    return (u.host + u.pathname.replace(/\/$/, '')).replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+}
+
+const cards: Array<{ label: string; url: string; icon: string }> = [];
+if (contact.github) {
+  cards.push({ label: 'GitHub', url: contact.github, icon: 'code' });
+}
+if (contact.linkedin) {
+  cards.push({ label: 'LinkedIn', url: contact.linkedin, icon: 'users' });
+}
+for (const extra of extraLinks) {
+  cards.push({
+    label: extra.label,
+    url: extra.url,
+    icon: extra.icon ?? 'globe',
+  });
+}
+---
+
+{cards.length > 0 && (
+  <section class="bp-elsewhere" aria-labelledby="bp-elsewhere-heading">
+    <h2 id="bp-elsewhere-heading" class="bp-eyebrow">Elsewhere</h2>
+    <ul class="bp-elsewhere__list" role="list">
+      {cards.map((card) => (
+        <li role="listitem">
+          <a
+            class="bp-elsewhere__card"
+            href={card.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="bp-elsewhere__icon" aria-hidden="true">
+              <Icons name={card.icon} size={22} />
+            </span>
+            <span class="bp-elsewhere__copy">
+              <span class="bp-elsewhere__label">{card.label}</span>
+              <span class="bp-elsewhere__host">{host(card.url)}</span>
+            </span>
+            <span class="bp-elsewhere__ext" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M14 3h7v7" />
+                <path d="M21 3 10 14" />
+                <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5" />
+              </svg>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  .bp-elsewhere {
+    margin-top: 2.5rem;
+  }
+
+  .bp-elsewhere .bp-eyebrow {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .bp-elsewhere__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .bp-elsewhere__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .bp-elsewhere__card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-md);
+    background: var(--bp-surface);
+    color: var(--bp-text);
+    text-decoration: none;
+  }
+
+  .bp-elsewhere__card:hover {
+    border-color: var(--bp-accent);
+    color: var(--bp-accent);
+  }
+
+  .bp-elsewhere__icon {
+    color: var(--bp-accent);
+    display: inline-flex;
+  }
+
+  .bp-elsewhere__copy {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .bp-elsewhere__label {
+    font-weight: 600;
+    font-size: var(--text-bp-base);
+  }
+
+  .bp-elsewhere__host {
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    color: var(--bp-text-mut);
+  }
+
+  .bp-elsewhere__ext {
+    color: var(--bp-text-mut);
+  }
+</style>

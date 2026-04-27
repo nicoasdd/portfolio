@@ -26,6 +26,40 @@ const resumeUrlSchema = z
   .min(1)
   .refine((v) => /^https?:\/\//.test(v) || v.startsWith('/'));
 
+const PILL_ICON_VALUES = [
+  'remote', 'onsite', 'hybrid', 'collab', 'opportunities', 'contract', 'sparkle',
+] as const;
+const VALUE_ICON_VALUES = [
+  'craft', 'performance', 'accessibility', 'pragmatism', 'security', 'systems',
+] as const;
+
+const availabilityPillSchema = z
+  .object({
+    icon: z.enum(PILL_ICON_VALUES),
+    label: z.string().min(1).max(40),
+  })
+  .strict();
+
+const contactSchema = z
+  .object({
+    email: z.string().email().optional(),
+    github: z.string().min(1).max(120).optional(),
+    linkedin: z.string().min(1).max(120).optional(),
+  })
+  .strict();
+
+const valueCardSchema = z
+  .object({
+    icon: z.enum(VALUE_ICON_VALUES),
+    title: z.string().min(1).max(24),
+    body: z.string().min(1).max(200),
+  })
+  .strict();
+
+const processSchema = z
+  .array(z.string().min(1).max(16))
+  .refine((arr) => arr.length === 5, 'process must have exactly 5 steps when supplied');
+
 const aboutSchema = z
   .object({
     name: z.string().min(1).max(80),
@@ -39,6 +73,11 @@ const aboutSchema = z
     skills: z.array(z.string().min(1).max(40)).min(1).max(40),
     socialLinks: z.array(socialLinkSchema).max(10).default([]),
     resumeUrl: resumeUrlSchema.optional(),
+    availabilityPills: z.array(availabilityPillSchema).max(4).optional(),
+    contact: contactSchema.optional(),
+    values: z.array(valueCardSchema).max(4).optional(),
+    process: processSchema.optional(),
+    processStatement: z.string().min(1).max(240).optional(),
   })
   .strict();
 

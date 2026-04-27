@@ -1,0 +1,56 @@
+---
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+interface Props {
+  variant: 'home' | 'category' | 'about';
+  class?: string;
+  ariaLabel?: string;
+}
+
+const { variant, class: className = '' } = Astro.props;
+
+let svg = '';
+try {
+  const file = join(process.cwd(), 'public', 'blueprint', `hero-${variant}.svg`);
+  svg = readFileSync(file, 'utf8');
+  svg = svg.replace(/<\?xml[^?]*\?>\s*/g, '');
+  if (!/aria-hidden=/.test(svg)) {
+    svg = svg.replace('<svg', '<svg aria-hidden="true" focusable="false"');
+  }
+} catch {
+  svg = '';
+}
+---
+
+<div class:list={['bp-iso-illustration', `bp-iso-illustration--${variant}`, className]} set:html={svg} />
+
+<style>
+  .bp-iso-illustration {
+    display: block;
+    width: 100%;
+    color: var(--bp-accent);
+  }
+
+  .bp-iso-illustration :global(svg) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .bp-iso-illustration :global(.bp-stroke),
+  .bp-iso-illustration :global([data-stroke]) {
+    stroke: currentColor;
+    fill: none;
+  }
+
+  .bp-iso-illustration :global(.bp-fill) {
+    fill: color-mix(in srgb, currentColor 12%, transparent);
+  }
+
+  .bp-iso-illustration :global(.bp-text) {
+    fill: var(--bp-text);
+    font-family: var(--font-bp-mono);
+    font-size: 10px;
+  }
+</style>

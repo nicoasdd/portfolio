@@ -7,22 +7,28 @@ interface Props {
 }
 
 const { category, size = 'sm' } = Astro.props;
-
-const colorVar: Record<CategoryKey, string> = {
-  personal: 'var(--color-cat-personal)',
-  startup: 'var(--color-cat-startup)',
-  corporate: 'var(--color-cat-corporate)',
-};
-
-const padding = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm';
 ---
 
-<span
-  class:list={[
-    'inline-flex items-center rounded-full font-semibold uppercase tracking-wide text-white',
-    padding,
-  ]}
-  style={`background-color: ${colorVar[category]};`}
->
-  {CATEGORY_LABELS[category]}
+<span class:list={['bp-category-badge', `bp-category-badge--${size}`]}>
+  {CATEGORY_LABELS[category].toUpperCase()}
 </span>
+
+<style>
+  .bp-category-badge {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-bp-mono);
+    color: var(--bp-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+  }
+
+  .bp-category-badge--sm {
+    font-size: var(--text-bp-xs);
+  }
+
+  .bp-category-badge--md {
+    font-size: var(--text-bp-sm);
+  }
+</style>

@@ -1,86 +1,214 @@
 ---
 import { CATEGORY_KEYS, CATEGORY_LABELS } from '../content.config';
 import { withBase } from '../lib/url';
+import { getAbout } from '../lib/about';
+import ThemeToggle from './ThemeToggle.astro';
 
 const pathname = Astro.url.pathname;
 const homeHref = withBase('/');
 const aboutHref = withBase('/about/');
 const isActive = (href: string) => pathname === href || pathname.startsWith(href);
+
+let siteName = 'Portfolio';
+try {
+  const profile = await getAbout();
+  siteName = profile.data.name;
+} catch {
+  siteName = 'Portfolio';
+}
+
+const navItems: Array<{ href: string; label: string }> = [
+  { href: homeHref, label: 'Home' },
+  { href: aboutHref, label: 'About' },
+  ...CATEGORY_KEYS.map((cat) => ({
+    href: withBase(`/category/${cat}/`),
+    label: CATEGORY_LABELS[cat],
+  })),
+];
 ---
 
-<header class="border-b border-[var(--color-border)] bg-[var(--color-bg)]/90 backdrop-blur sticky top-0 z-40">
-  <div class="container-narrow flex items-center justify-between gap-4 py-4">
-    <a href={homeHref} class="text-lg font-bold tracking-tight no-underline text-[var(--color-text)]" aria-label="Home">
-      Portfolio
+<header class="bp-header">
+  <div class="bp-header__inner container-narrow">
+    <a
+      href={homeHref}
+      class="bp-header__wordmark"
+      aria-label={`${siteName} — home`}
+    >
+      {siteName}
     </a>
 
     <button
       type="button"
-      class="md:hidden inline-flex items-center justify-center rounded p-2 text-[var(--color-text)]"
+      class="bp-header__menu-btn"
       aria-label="Toggle navigation"
       aria-controls="primary-nav"
       aria-expanded="false"
       data-mobile-nav-toggle
     >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
         <line x1="3" y1="6" x2="21" y2="6" />
         <line x1="3" y1="12" x2="21" y2="12" />
         <line x1="3" y1="18" x2="21" y2="18" />
       </svg>
     </button>
 
-    <nav
-      id="primary-nav"
-      class="hidden md:block"
-      data-mobile-nav
-      aria-label="Primary"
-    >
-      <ul class="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 text-sm font-medium">
-        <li>
-          <a
-            href={homeHref}
-            class:list={[
-              'no-underline px-2 py-1 rounded text-[var(--color-text)] hover:text-[var(--color-accent)]',
-              pathname === homeHref && 'text-[var(--color-accent)]',
-            ]}
-            aria-current={pathname === homeHref ? 'page' : undefined}
-          >
-            Home
-          </a>
-        </li>
-        <li>
-          <a
-            href={aboutHref}
-            class:list={[
-              'no-underline px-2 py-1 rounded text-[var(--color-text)] hover:text-[var(--color-accent)]',
-              isActive(aboutHref) && 'text-[var(--color-accent)]',
-            ]}
-            aria-current={isActive(aboutHref) ? 'page' : undefined}
-          >
-            About
-          </a>
-        </li>
-        {CATEGORY_KEYS.map((cat) => {
-          const href = withBase(`/category/${cat}/`);
+    <nav id="primary-nav" class="bp-header__nav" data-mobile-nav aria-label="Primary">
+      <ul class="bp-header__list">
+        {navItems.map((item) => {
+          const active = item.href === homeHref ? pathname === homeHref : isActive(item.href);
           return (
             <li>
               <a
-                href={href}
-                class:list={[
-                  'no-underline px-2 py-1 rounded text-[var(--color-text)] hover:text-[var(--color-accent)]',
-                  isActive(href) && 'text-[var(--color-accent)]',
-                ]}
-                aria-current={isActive(href) ? 'page' : undefined}
+                href={item.href}
+                class:list={['bp-header__link', active && 'bp-header__link--active']}
+                aria-current={active ? 'page' : undefined}
               >
-                {CATEGORY_LABELS[cat]}
+                {item.label}
               </a>
             </li>
           );
         })}
       </ul>
+      <div class="bp-header__toggle-wrap">
+        <ThemeToggle />
+      </div>
     </nav>
   </div>
 </header>
+
+<style>
+  .bp-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--bp-canvas) 92%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--bp-line-soft);
+  }
+
+  .bp-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .bp-header__wordmark {
+    font-family: var(--font-bp-sans);
+    font-size: var(--text-bp-lg);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--bp-text);
+    text-decoration: none;
+  }
+
+  .bp-header__wordmark:hover {
+    color: var(--bp-accent);
+  }
+
+  .bp-header__menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-sm);
+    color: var(--bp-text);
+    cursor: pointer;
+  }
+
+  @media (min-width: 768px) {
+    .bp-header__menu-btn {
+      display: none;
+    }
+  }
+
+  .bp-header__nav {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .bp-header__nav {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+  }
+
+  .bp-header__nav.is-open {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    padding: 1rem;
+    background: var(--bp-canvas);
+    border-bottom: 1px solid var(--bp-line);
+  }
+
+  .bp-header__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.25rem;
+    flex-direction: column;
+  }
+
+  @media (min-width: 768px) {
+    .bp-header__list {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .bp-header__link {
+    position: relative;
+    display: inline-block;
+    padding: 0.25rem 0.1rem;
+    font-size: var(--text-bp-sm);
+    font-weight: 500;
+    color: var(--bp-text);
+    text-decoration: none;
+    transition: color 150ms ease-out;
+  }
+
+  .bp-header__link:hover {
+    color: var(--bp-accent);
+  }
+
+  .bp-header__link--active {
+    color: var(--bp-accent);
+  }
+
+  .bp-header__link--active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 2px;
+    background: var(--bp-accent);
+  }
+
+  .bp-header__toggle-wrap {
+    display: flex;
+    align-items: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bp-header__link {
+      transition: none;
+    }
+  }
+</style>
 
 <script>
   const toggle = document.querySelector('[data-mobile-nav-toggle]') as HTMLButtonElement | null;
@@ -89,13 +217,7 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
   function setExpanded(expanded: boolean) {
     if (!toggle || !nav) return;
     toggle.setAttribute('aria-expanded', String(expanded));
-    if (expanded) {
-      nav.classList.remove('hidden');
-      nav.classList.add('block', 'absolute', 'left-0', 'right-0', 'top-full', 'bg-[var(--color-bg)]', 'border-b', 'border-[var(--color-border)]', 'p-4');
-    } else {
-      nav.classList.add('hidden');
-      nav.classList.remove('block', 'absolute', 'left-0', 'right-0', 'top-full', 'bg-[var(--color-bg)]', 'border-b', 'border-[var(--color-border)]', 'p-4');
-    }
+    nav.classList.toggle('is-open', expanded);
   }
 
   toggle?.addEventListener('click', () => {

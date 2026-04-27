@@ -1,0 +1,271 @@
+---
+import IndexNumber from './blueprint/IndexNumber.astro';
+import CategoryBadge from './CategoryBadge.astro';
+import MetricPanel from './blueprint/MetricPanel.astro';
+import ArchitectureStrip from './blueprint/ArchitectureStrip.astro';
+import PillChip from './blueprint/PillChip.astro';
+import type { ProjectWithMeta } from '../lib/projects';
+
+interface Props {
+  project: ProjectWithMeta;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const { entry, category, url } = project;
+const data = entry.data;
+const narrative = data.narrative;
+const hasNarrative =
+  (narrative?.challenge?.length ?? 0) +
+    (narrative?.built?.length ?? 0) +
+    (narrative?.impact?.length ?? 0) >
+  0;
+const hasArchitecture = (data.architecture?.length ?? 0) >= 2;
+---
+
+<article class="bp-featured-card">
+  <span class="bp-featured-card__tick bp-featured-card__tick--tl" aria-hidden="true"></span>
+  <span class="bp-featured-card__tick bp-featured-card__tick--tr" aria-hidden="true"></span>
+  <span class="bp-featured-card__tick bp-featured-card__tick--bl" aria-hidden="true"></span>
+  <span class="bp-featured-card__tick bp-featured-card__tick--br" aria-hidden="true"></span>
+
+  <header class="bp-featured-card__header">
+    <div class="bp-featured-card__heading">
+      <IndexNumber n={index} />
+      <div>
+        <p class="bp-featured-card__tagline">{data.impactTagline ?? data.description}</p>
+        <h3 class="bp-featured-card__title">
+          <a href={url}>{data.title}</a>
+        </h3>
+        <div class="bp-featured-card__meta">
+          <CategoryBadge category={category} />
+        </div>
+      </div>
+    </div>
+
+    {data.metrics && data.metrics.length > 0 && (
+      <MetricPanel metrics={data.metrics} class="bp-featured-card__metrics" />
+    )}
+  </header>
+
+  {hasNarrative && narrative && (
+    <div class="bp-featured-card__narrative">
+      {(narrative.challenge?.length ?? 0) > 0 && (
+        <div class="bp-featured-card__column">
+          <h4>Challenge</h4>
+          <ul role="list">
+            {narrative.challenge!.map((line) => (
+              <li role="listitem">{line}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {(narrative.built?.length ?? 0) > 0 && (
+        <div class="bp-featured-card__column">
+          <h4>Built</h4>
+          <ul role="list">
+            {narrative.built!.map((line) => (
+              <li role="listitem">{line}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {(narrative.impact?.length ?? 0) > 0 && (
+        <div class="bp-featured-card__column">
+          <h4>Impact</h4>
+          <ul role="list">
+            {narrative.impact!.map((line) => (
+              <li role="listitem">{line}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )}
+
+  {hasArchitecture && <ArchitectureStrip nodes={data.architecture} />}
+
+  <footer class="bp-featured-card__footer">
+    <span class="bp-featured-card__tech-label">Tech stack</span>
+    <ul class="bp-featured-card__tech" role="list">
+      {data.techStack.slice(0, 8).map((tech) => (
+        <li role="listitem">
+          <PillChip size="sm">{tech}</PillChip>
+        </li>
+      ))}
+    </ul>
+    <a class="bp-featured-card__link" href={url}>
+      Read full project →
+    </a>
+  </footer>
+</article>
+
+<style>
+  .bp-featured-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.75rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-lg);
+    background: var(--bp-surface);
+    margin-bottom: 2rem;
+  }
+
+  .bp-featured-card__tick {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+  }
+  .bp-featured-card__tick::before,
+  .bp-featured-card__tick::after {
+    content: '';
+    position: absolute;
+    background: var(--bp-accent);
+  }
+  .bp-featured-card__tick::before { width: 10px; height: 2px; }
+  .bp-featured-card__tick::after { width: 2px; height: 10px; }
+  .bp-featured-card__tick--tl { top: -1px; left: -1px; }
+  .bp-featured-card__tick--tl::before, .bp-featured-card__tick--tl::after { top: 0; left: 0; }
+  .bp-featured-card__tick--tr { top: -1px; right: -1px; }
+  .bp-featured-card__tick--tr::before, .bp-featured-card__tick--tr::after { top: 0; right: 0; }
+  .bp-featured-card__tick--bl { bottom: -1px; left: -1px; }
+  .bp-featured-card__tick--bl::before, .bp-featured-card__tick--bl::after { bottom: 0; left: 0; }
+  .bp-featured-card__tick--br { bottom: -1px; right: -1px; }
+  .bp-featured-card__tick--br::before, .bp-featured-card__tick--br::after { bottom: 0; right: 0; }
+
+  .bp-featured-card__header {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .bp-featured-card__header {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+
+  .bp-featured-card__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .bp-featured-card__tagline {
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--bp-accent);
+    margin: 0;
+  }
+
+  .bp-featured-card__title {
+    font-size: var(--text-bp-3xl);
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .bp-featured-card__title a {
+    color: var(--bp-text);
+    text-decoration: none;
+  }
+
+  .bp-featured-card__title a:hover {
+    color: var(--bp-accent);
+  }
+
+  .bp-featured-card__meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .bp-featured-card__narrative {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .bp-featured-card__narrative {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .bp-featured-card__column h4 {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--bp-accent);
+  }
+
+  .bp-featured-card__column ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: var(--text-bp-sm);
+    color: var(--bp-text);
+  }
+
+  .bp-featured-card__column li {
+    position: relative;
+    padding-left: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .bp-featured-card__column li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--bp-accent);
+    font-weight: 700;
+  }
+
+  .bp-featured-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--bp-line);
+  }
+
+  .bp-featured-card__tech-label {
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--bp-text-mut);
+  }
+
+  .bp-featured-card__tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+
+  .bp-featured-card__link {
+    font-size: var(--text-bp-sm);
+    color: var(--bp-accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .bp-featured-card__link:hover {
+    color: var(--bp-accent-hover);
+  }
+</style>

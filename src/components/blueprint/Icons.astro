@@ -1,0 +1,303 @@
+---
+/*
+  Single source for every blueprint icon.
+  All paths use currentColor so icons theme-flip automatically.
+  Keys match the Zod enums in src/content.config.ts:
+  - ArchIconKey, PillIcon, ValueIcon, CredibilityIcon, SystemsIcon
+*/
+
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const { name, size = 20, class: className = '', ariaLabel } = Astro.props;
+const ariaHidden = !ariaLabel;
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden={ariaHidden ? 'true' : undefined}
+  aria-label={ariaLabel}
+  role={ariaLabel ? 'img' : undefined}
+>
+  {/* Architecture icons */}
+  {name === 'users' && (
+    <g>
+      <circle cx="9" cy="9" r="3" />
+      <path d="M4 20a5 5 0 0 1 10 0" />
+      <circle cx="17" cy="10" r="2.5" />
+      <path d="M14.5 20a4 4 0 0 1 7 0" />
+    </g>
+  )}
+  {name === 'api' && (
+    <g>
+      <rect x="3" y="7" width="18" height="10" rx="1.5" />
+      <path d="M7 10h3M7 14h5M17 10l2 2-2 2" />
+    </g>
+  )}
+  {name === 'db' && (
+    <g>
+      <ellipse cx="12" cy="5" rx="8" ry="3" />
+      <path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5" />
+      <path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" />
+    </g>
+  )}
+  {name === 'cache' && (
+    <g>
+      <rect x="3" y="5" width="18" height="5" rx="1" />
+      <rect x="3" y="14" width="18" height="5" rx="1" />
+      <circle cx="6" cy="7.5" r="0.7" />
+      <circle cx="6" cy="16.5" r="0.7" />
+    </g>
+  )}
+  {name === 'queue' && (
+    <g>
+      <rect x="3" y="9" width="4" height="6" rx="1" />
+      <rect x="9" y="9" width="4" height="6" rx="1" />
+      <rect x="15" y="9" width="4" height="6" rx="1" />
+      <path d="M21 12h1" />
+    </g>
+  )}
+  {name === 'server' && (
+    <g>
+      <rect x="3" y="4" width="18" height="7" rx="1.5" />
+      <rect x="3" y="13" width="18" height="7" rx="1.5" />
+      <circle cx="7" cy="7.5" r="0.7" />
+      <circle cx="7" cy="16.5" r="0.7" />
+      <path d="M10 7.5h8M10 16.5h8" />
+    </g>
+  )}
+  {name === 'web' && (
+    <g>
+      <rect x="3" y="4" width="18" height="16" rx="1.5" />
+      <path d="M3 9h18" />
+      <circle cx="6" cy="6.5" r="0.6" />
+      <circle cx="8.5" cy="6.5" r="0.6" />
+    </g>
+  )}
+  {name === 'messaging' && (
+    <g>
+      <path d="M4 5h16v10H8l-4 4V5z" />
+    </g>
+  )}
+  {name === 'blockchain' && (
+    <g>
+      <rect x="3" y="3" width="6" height="6" rx="1" />
+      <rect x="15" y="3" width="6" height="6" rx="1" />
+      <rect x="3" y="15" width="6" height="6" rx="1" />
+      <rect x="15" y="15" width="6" height="6" rx="1" />
+      <path d="M9 6h6M9 18h6M6 9v6M18 9v6" />
+    </g>
+  )}
+  {name === 'cloud' && (
+    <g>
+      <path d="M7 17a4 4 0 1 1 .7-7.9A5 5 0 0 1 17 9a4 4 0 0 1 0 8H7z" />
+    </g>
+  )}
+
+  {/* Pill icons (availability) */}
+  {name === 'remote' && (
+    <g>
+      <path d="M3 7h18M3 12h18M3 17h12" />
+      <circle cx="18" cy="17" r="2" />
+    </g>
+  )}
+  {name === 'onsite' && (
+    <g>
+      <path d="M3 21V8l9-5 9 5v13" />
+      <rect x="9" y="13" width="6" height="8" />
+    </g>
+  )}
+  {name === 'hybrid' && (
+    <g>
+      <path d="M4 20h16M7 10l5-6 5 6" />
+      <path d="M9 10v10M15 10v10" />
+    </g>
+  )}
+  {name === 'collab' && (
+    <g>
+      <circle cx="8" cy="10" r="3" />
+      <circle cx="16" cy="10" r="3" />
+      <path d="M3 20a5 5 0 0 1 10 0M11 20a5 5 0 0 1 10 0" />
+    </g>
+  )}
+  {name === 'opportunities' && (
+    <g>
+      <path d="M12 3l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" />
+    </g>
+  )}
+  {name === 'contract' && (
+    <g>
+      <path d="M6 3h9l3 3v15H6z" />
+      <path d="M14 3v4h4" />
+      <path d="M9 12h6M9 16h6" />
+    </g>
+  )}
+  {name === 'sparkle' && (
+    <g>
+      <path d="M12 3v5M12 16v5M3 12h5M16 12h5" />
+      <path d="M6 6l3 3M15 15l3 3M6 18l3-3M15 9l3-3" />
+    </g>
+  )}
+
+  {/* Value icons */}
+  {name === 'craft' && (
+    <g>
+      <path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z" />
+      <path d="M9 12l2 2 4-4" />
+    </g>
+  )}
+  {name === 'performance' && (
+    <g>
+      <path d="M3 18a9 9 0 0 1 18 0" />
+      <path d="M12 18l5-5" />
+      <circle cx="12" cy="18" r="1" />
+    </g>
+  )}
+  {name === 'accessibility' && (
+    <g>
+      <circle cx="12" cy="5" r="2" />
+      <path d="M5 10h14" />
+      <path d="M12 10v4M9 20l3-6 3 6" />
+    </g>
+  )}
+  {name === 'pragmatism' && (
+    <g>
+      <path d="M4 7l3-3 3 3M7 4v16" />
+      <path d="M20 17l-3 3-3-3M17 20V4" />
+    </g>
+  )}
+  {name === 'security' && (
+    <g>
+      <path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z" />
+      <rect x="9" y="10" width="6" height="6" rx="1" />
+      <path d="M11 13v1M13 13v1" />
+    </g>
+  )}
+  {name === 'systems' && (
+    <g>
+      <rect x="3" y="3" width="6" height="6" />
+      <rect x="15" y="3" width="6" height="6" />
+      <rect x="9" y="15" width="6" height="6" />
+      <path d="M6 9v3a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V9" />
+    </g>
+  )}
+
+  {/* Credibility icons */}
+  {name === 'frontend' && (
+    <g>
+      <rect x="3" y="4" width="18" height="14" rx="1.5" />
+      <path d="M3 8h18M6 6.5h.01M8.5 6.5h.01" />
+      <path d="M8 20h8" />
+    </g>
+  )}
+  {name === 'fullstack' && (
+    <g>
+      <rect x="3" y="3" width="18" height="6" rx="1" />
+      <rect x="3" y="10" width="18" height="4" rx="1" />
+      <rect x="3" y="15" width="18" height="6" rx="1" />
+    </g>
+  )}
+  {name === 'architecture' && (
+    <g>
+      <path d="M3 21l9-18 9 18z" />
+      <path d="M7 14h10M12 3v18" />
+    </g>
+  )}
+  {name === 'web3' && (
+    <g>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+    </g>
+  )}
+  {name === 'fintech' && (
+    <g>
+      <rect x="3" y="6" width="18" height="12" rx="1.5" />
+      <circle cx="12" cy="12" r="3" />
+      <path d="M6 9v.01M18 15v.01" />
+    </g>
+  )}
+  {name === 'marketplace' && (
+    <g>
+      <path d="M3 7h18l-1 3H4z" />
+      <rect x="4" y="10" width="16" height="11" />
+      <rect x="10" y="14" width="4" height="7" />
+    </g>
+  )}
+  {name === 'mobile' && (
+    <g>
+      <rect x="7" y="2" width="10" height="20" rx="2" />
+      <path d="M11 18h2" />
+    </g>
+  )}
+  {name === 'design' && (
+    <g>
+      <path d="M4 7l8 13 8-13" />
+      <path d="M4 7l8-4 8 4" />
+    </g>
+  )}
+
+  {/* Systems-strip icons */}
+  {name === 'aws' && (
+    <g>
+      <path d="M4 14c0 3 3 5 8 5s8-2 8-5" />
+      <path d="M7 11l2-4 2 4M9 9.5h1M12 7h3v4M17 7h2" />
+    </g>
+  )}
+  {name === 'azure' && (
+    <g>
+      <path d="M4 19l7-14 3 6-7 8zM11 19l7-14 2 14z" />
+    </g>
+  )}
+  {name === 'cloudflare' && (
+    <g>
+      <path d="M7 17a4 4 0 1 1 .7-7.9A5 5 0 0 1 17 9a4 4 0 0 1 0 8H7z" />
+      <path d="M9 13l4 2-4 2" />
+    </g>
+  )}
+  {name === 'gcp' && (
+    <g>
+      <path d="M7 17a4 4 0 1 1 .7-7.9A5 5 0 0 1 17 9a4 4 0 0 1 0 8H7z" />
+      <circle cx="12" cy="13" r="1.5" />
+    </g>
+  )}
+  {name === 'app' && (
+    <g>
+      <rect x="4" y="4" width="16" height="16" rx="2" />
+      <path d="M4 9h16M9 4v5" />
+    </g>
+  )}
+  {name === 'shield' && (
+    <g>
+      <path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z" />
+    </g>
+  )}
+  {name === 'globe' && (
+    <g>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" />
+    </g>
+  )}
+  {name === 'lock' && (
+    <g>
+      <rect x="5" y="10" width="14" height="10" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+    </g>
+  )}
+  {name === 'code' && (
+    <g>
+      <path d="M8 6l-5 6 5 6M16 6l5 6-5 6M14 4l-4 16" />
+    </g>
+  )}
+</svg>

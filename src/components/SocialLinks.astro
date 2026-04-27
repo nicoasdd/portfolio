@@ -16,15 +16,15 @@ const { links, ariaLabel = 'Social and elsewhere' } = Astro.props;
 ---
 
 {links.length > 0 && (
-  <nav aria-label={ariaLabel} class="not-prose">
-    <ul role="list" class="flex flex-wrap gap-3 list-none m-0 p-0">
+  <nav aria-label={ariaLabel} class="bp-social">
+    <ul role="list" class="bp-social__list">
       {links.map((link) => (
         <li role="listitem">
           <a
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-md no-underline border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+            class="bp-social-link"
           >
             <span aria-hidden="true" class="inline-flex w-4 h-4">
               {link.icon === 'github' && (
@@ -59,3 +59,40 @@ const { links, ariaLabel = 'Social and elsewhere' } = Astro.props;
     </ul>
   </nav>
 )}
+
+<style>
+  .bp-social__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .bp-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-sm);
+    background: var(--bp-surface);
+    color: var(--bp-text);
+    font-size: var(--text-bp-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 150ms ease-out, color 150ms ease-out;
+  }
+
+  .bp-social-link:hover {
+    border-color: var(--bp-accent);
+    color: var(--bp-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bp-social-link {
+      transition: none;
+    }
+  }
+</style>

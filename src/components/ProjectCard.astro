@@ -1,60 +1,189 @@
 ---
 import CategoryBadge from './CategoryBadge.astro';
+import IndexNumber from './blueprint/IndexNumber.astro';
+import SparklineGlyph from './blueprint/SparklineGlyph.astro';
+import PillChip from './blueprint/PillChip.astro';
 import type { ProjectWithMeta } from '../lib/projects';
-import { safeImagePath } from '../lib/assets';
 
 interface Props {
   project: ProjectWithMeta;
+  index?: number;
 }
 
-const { project } = Astro.props;
+const { project, index } = Astro.props;
 const { entry, category, url } = project;
 const data = entry.data;
-const thumbnail = safeImagePath(data.thumbnail);
+const tagline = data.impactTagline ?? data.description;
+const metric = data.highlightMetric;
+const techVisible = data.techStack.slice(0, 4);
+const techOverflow = Math.max(0, data.techStack.length - 4);
 ---
 
-<article class="group h-full">
-  <a
-    href={url}
-    class="block h-full rounded-xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface)] no-underline text-[var(--color-text)] transition-shadow hover:shadow-lg focus-visible:shadow-lg"
-    aria-labelledby={`p-${project.slug}-title`}
-  >
-    <div class="aspect-[4/3] overflow-hidden bg-[var(--color-bg-subtle)]">
-      <img
-        src={thumbnail}
-        alt={`${data.title} — preview`}
-        loading="lazy"
-        decoding="async"
-        width="800"
-        height="600"
-        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-      />
-    </div>
-    <div class="p-5">
-      <div class="flex items-center justify-between gap-2 mb-3">
-        <CategoryBadge category={category} />
-        <span class="text-xs text-[var(--color-text-muted)]">
-          {data.period.start} → {data.period.end}
-        </span>
-      </div>
-      <h3 id={`p-${project.slug}-title`} class="text-xl font-semibold m-0 leading-snug">
-        {data.title}
-      </h3>
-      <p class="mt-2 mb-3 text-sm text-[var(--color-text-muted)] line-clamp-3">
-        {data.description}
+<article class="bp-project-card">
+  <a href={url} class="bp-project-card__link" aria-labelledby={`p-${project.slug}-title`}>
+    <span class="bp-project-card__tick bp-project-card__tick--tl" aria-hidden="true"></span>
+    <span class="bp-project-card__tick bp-project-card__tick--tr" aria-hidden="true"></span>
+    <span class="bp-project-card__tick bp-project-card__tick--bl" aria-hidden="true"></span>
+    <span class="bp-project-card__tick bp-project-card__tick--br" aria-hidden="true"></span>
+
+    <header class="bp-project-card__header">
+      {typeof index === 'number' && <IndexNumber n={index} />}
+      <CategoryBadge category={category} />
+    </header>
+
+    <h3 id={`p-${project.slug}-title`} class="bp-project-card__title">
+      {data.title}
+    </h3>
+
+    <p class="bp-project-card__tagline">{tagline}</p>
+
+    {metric && (
+      <p class="bp-project-card__metric" aria-label={`${metric.label}: ${metric.value}`}>
+        <SparklineGlyph trend={metric.trend ?? 'up'} />
+        <span class="bp-project-card__metric-value">{metric.value}</span>
+        <span class="bp-project-card__metric-label">{metric.label}</span>
       </p>
-      <ul class="flex flex-wrap gap-1.5 list-none m-0 p-0">
-        {data.techStack.slice(0, 5).map((tech) => (
-          <li class="text-xs px-2 py-0.5 rounded bg-[var(--color-bg-subtle)] text-[var(--color-text-muted)]">
-            {tech}
+    )}
+
+    {techVisible.length > 0 && (
+      <ul class="bp-project-card__tech" role="list">
+        {techVisible.map((tech) => (
+          <li role="listitem">
+            <PillChip size="sm">{tech}</PillChip>
           </li>
         ))}
-        {data.techStack.length > 5 && (
-          <li class="text-xs px-2 py-0.5 rounded text-[var(--color-text-muted)]">
-            +{data.techStack.length - 5}
+        {techOverflow > 0 && (
+          <li role="listitem">
+            <PillChip size="sm">+{techOverflow}</PillChip>
           </li>
         )}
       </ul>
-    </div>
+    )}
   </a>
 </article>
+
+<style>
+  .bp-project-card {
+    height: 100%;
+  }
+
+  .bp-project-card__link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    height: 100%;
+    padding: 1.25rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-lg);
+    background: var(--bp-surface);
+    color: var(--bp-text);
+    text-decoration: none;
+    transition: border-color 150ms ease-out, transform 150ms ease-out;
+  }
+
+  .bp-project-card__link:hover {
+    border-color: var(--bp-accent);
+  }
+
+  .bp-project-card__tick {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+  }
+  .bp-project-card__tick::before,
+  .bp-project-card__tick::after {
+    content: '';
+    position: absolute;
+    background: var(--bp-accent);
+  }
+  .bp-project-card__tick::before {
+    width: 10px;
+    height: 2px;
+  }
+  .bp-project-card__tick::after {
+    width: 2px;
+    height: 10px;
+  }
+  .bp-project-card__tick--tl { top: -1px; left: -1px; }
+  .bp-project-card__tick--tl::before { top: 0; left: 0; }
+  .bp-project-card__tick--tl::after { top: 0; left: 0; }
+  .bp-project-card__tick--tr { top: -1px; right: -1px; }
+  .bp-project-card__tick--tr::before { top: 0; right: 0; }
+  .bp-project-card__tick--tr::after { top: 0; right: 0; }
+  .bp-project-card__tick--bl { bottom: -1px; left: -1px; }
+  .bp-project-card__tick--bl::before { bottom: 0; left: 0; }
+  .bp-project-card__tick--bl::after { bottom: 0; left: 0; }
+  .bp-project-card__tick--br { bottom: -1px; right: -1px; }
+  .bp-project-card__tick--br::before { bottom: 0; right: 0; }
+  .bp-project-card__tick--br::after { bottom: 0; right: 0; }
+
+  .bp-project-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .bp-project-card__title {
+    font-size: var(--text-bp-xl);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0.25rem 0 0;
+    color: var(--bp-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .bp-project-card__tagline {
+    font-size: var(--text-bp-sm);
+    color: var(--bp-text-mut);
+    margin: 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .bp-project-card__metric {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    color: var(--bp-accent);
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-sm);
+  }
+
+  .bp-project-card__metric-value {
+    font-weight: 700;
+    color: var(--bp-text);
+  }
+
+  .bp-project-card__metric-label {
+    color: var(--bp-text-mut);
+    font-family: var(--font-bp-sans);
+    font-size: var(--text-bp-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .bp-project-card__tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: auto 0 0;
+    padding: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bp-project-card__link {
+      transition: none;
+    }
+  }
+</style>

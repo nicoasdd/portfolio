@@ -14,6 +14,34 @@ techStack:
 thumbnail: "/projects/csgo-try/thumbnail.svg"
 featured: true
 order: 280
+impactTagline: "Bootstrapped CS:GO Skin Betting Platform"
+highlightMetric:
+  label: "TOTAL USERS"
+  value: "70K"
+  trend: "up"
+metrics:
+  - { label: "TOTAL REGISTERED", value: "70K", unit: "USERS" }
+  - { label: "PEAK USERS", value: "~500", unit: "CONCURRENT" }
+  - { label: "RAN IN PRODUCTION", value: "~2", unit: "YEARS" }
+narrative:
+  challenge:
+    - "Build a trustworthy platform in a high-risk, high-abuse environment."
+    - "Handle real-money skin flows, inventory volatility, and real-time bets."
+    - "Scale concurrency on minimal infrastructure."
+  built:
+    - "Real-time betting engine with provably-fair, transparent results."
+    - "Steam inventory integration — deposits, withdrawals, refunds end-to-end."
+    - "Live odds, match tracking, API ingestion, admin tooling, and user dashboard."
+  impact:
+    - "70,000 total users onboarded organically."
+    - "~500 concurrent users sustained on a single Node.js box."
+    - "Two years of continuous operation with real revenue."
+architecture:
+  - { label: "USERS", icon: "users", note: "70k players" }
+  - { label: "FRONTEND", icon: "web", note: "jQuery / UI" }
+  - { label: "REALTIME", icon: "server", note: "Node.js + Socket.IO" }
+  - { label: "STEAM API", icon: "api", note: "Inventory + trades" }
+  - { label: "LEDGER DB", icon: "db", note: "MySQL — users / bets / trades" }
 ---
 
 ## Overview

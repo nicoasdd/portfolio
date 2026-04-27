@@ -21,6 +21,33 @@ socialLinks:
   - label: "LinkedIn"
     url: "https://www.linkedin.com/in/your-handle/"
     icon: "linkedin"
+availabilityPills:
+  - icon: "remote"
+    label: "Remote"
+  - icon: "collab"
+    label: "Open to new collaborations"
+  - icon: "opportunities"
+    label: "Open to opportunities"
+values:
+  - icon: "craft"
+    title: "Craft"
+    body: "Clean systems, thoughtful details, and code I'm proud to maintain."
+  - icon: "performance"
+    title: "Performance"
+    body: "Fast by default. I optimize for real-world metrics and smooth UX."
+  - icon: "accessibility"
+    title: "Accessibility"
+    body: "Inclusive experiences for everyone — built with WCAG in mind."
+  - icon: "pragmatism"
+    title: "Pragmatism"
+    body: "The right tool for the job. Ship value early, iterate with feedback."
+process:
+  - "Understand"
+  - "Design"
+  - "Build"
+  - "Iterate"
+  - "Deliver"
+processStatement: "I bring a product mindset and engineering discipline to every project. I communicate clearly, take ownership, and make the complex feel simple. I care about outcomes, not just output."
 ---
 
 ## Hi, I'm Your Name

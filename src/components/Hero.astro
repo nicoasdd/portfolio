@@ -1,42 +1,169 @@
 ---
+import IsoIllustration from './blueprint/IsoIllustration.astro';
+import { getSite } from '../lib/site';
+import { getAbout } from '../lib/about';
 import { withBase } from '../lib/url';
 
-interface Props {
-  heading?: string;
-  intro?: string;
-  ctaHref?: string;
-  ctaLabel?: string;
+const { data: site } = await getSite();
+
+let firstName = 'Nico';
+try {
+  const profile = await getAbout();
+  firstName = profile.data.name.split(' ')[0] ?? 'Nico';
+} catch {
+  firstName = 'Nico';
 }
 
-const {
-  heading = 'Selected work across personal, startup, and corporate projects.',
-  intro = 'A curated portfolio of things I have built — open-source weekend projects, startups I have co-founded, and large-scale corporate engineering.',
-  ctaHref = '#projects',
-  ctaLabel = 'See projects',
-} = Astro.props;
-
-const aboutHref = withBase('/about/');
+const primaryHref = site.heroPrimaryCtaHref.startsWith('http')
+  ? site.heroPrimaryCtaHref
+  : withBase(site.heroPrimaryCtaHref);
+const secondaryHref = withBase('/about/');
 ---
 
-<section class="container-narrow pt-12 md:pt-20 pb-12">
-  <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl m-0">
-    {heading}
-  </h1>
-  <p class="mt-6 max-w-2xl text-lg md:text-xl text-[var(--color-text-muted)]">
-    {intro}
-  </p>
-  <div class="mt-8 flex flex-wrap items-center gap-3">
-    <a
-      href={ctaHref}
-      class="inline-flex items-center justify-center rounded-full bg-[var(--color-accent)] text-white font-semibold px-6 py-3 no-underline hover:bg-[var(--color-accent-hover)]"
-    >
-      {ctaLabel}
-    </a>
-    <a
-      href={aboutHref}
-      class="inline-flex items-center justify-center rounded-full border border-[var(--color-border)] text-[var(--color-text)] font-semibold px-6 py-3 no-underline hover:border-[var(--color-accent)]"
-    >
-      About
-    </a>
+<section class="bp-hero" aria-labelledby="bp-hero-heading">
+  <div class="bp-hero__inner container-narrow">
+    <div class="bp-hero__text">
+      <p class="bp-hero__greeting">
+        <span>Hi, I'm {firstName}</span>
+        <span class="bp-hero__wave" aria-hidden="true">👋</span>
+      </p>
+      <h1 id="bp-hero-heading" class="bp-hero__title">
+        Selected work across<br />
+        personal, startup, and<br />
+        corporate projects.
+      </h1>
+      <p class="bp-hero__sub">
+        I build open-source weekend projects, ship startup products, create
+        Web3 systems, and architect large-scale corporate platforms that
+        serve millions.
+      </p>
+      <div class="bp-hero__ctas">
+        <a class="bp-hero__cta bp-hero__cta--primary" href={primaryHref}>
+          View selected work
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class="bp-hero__cta bp-hero__cta--secondary" href={secondaryHref}>
+          <span aria-hidden="true" class="bp-hero__user-glyph">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+              <circle cx="12" cy="9" r="3.5" />
+              <path d="M4 20a8 8 0 0 1 16 0" />
+            </svg>
+          </span>
+          About me
+        </a>
+      </div>
+    </div>
+    <div class="bp-hero__illustration" aria-hidden="true">
+      <IsoIllustration variant="home" />
+    </div>
   </div>
 </section>
+
+<style>
+  .bp-hero {
+    padding: 3rem 0 2.5rem;
+  }
+
+  .bp-hero__inner {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .bp-hero__inner {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .bp-hero__greeting {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 1rem;
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-sm);
+    color: var(--bp-accent);
+    text-transform: none;
+    letter-spacing: 0.01em;
+  }
+
+  .bp-hero__title {
+    font-size: var(--text-bp-hero);
+    line-height: 1.05;
+    margin: 0 0 1.25rem;
+    letter-spacing: -0.015em;
+  }
+
+  .bp-hero__sub {
+    font-size: var(--text-bp-lg);
+    color: var(--bp-text-mut);
+    max-width: 52ch;
+    margin: 0 0 1.75rem;
+    line-height: 1.55;
+  }
+
+  .bp-hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .bp-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    font-size: var(--text-bp-sm);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--radius-bp-xl);
+    border: 1px solid var(--bp-line);
+    transition: background 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
+  }
+
+  .bp-hero__cta--primary {
+    background: var(--bp-accent);
+    color: var(--bp-accent-contrast);
+    border-color: var(--bp-accent);
+  }
+
+  .bp-hero__cta--primary:hover {
+    background: var(--bp-accent-hover);
+    border-color: var(--bp-accent-hover);
+    color: var(--bp-accent-contrast);
+  }
+
+  .bp-hero__cta--secondary {
+    background: transparent;
+    color: var(--bp-text);
+  }
+
+  .bp-hero__cta--secondary:hover {
+    border-color: var(--bp-accent);
+    color: var(--bp-accent);
+  }
+
+  .bp-hero__user-glyph {
+    display: inline-flex;
+    color: currentColor;
+  }
+
+  .bp-hero__illustration {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .bp-hero__illustration {
+      display: block;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bp-hero__cta {
+      transition: none;
+    }
+  }
+</style>

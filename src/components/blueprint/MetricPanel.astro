@@ -1,0 +1,42 @@
+---
+import MetricTile from './MetricTile.astro';
+import type { MetricTile as MetricTileData } from '../../content.config';
+
+interface Props {
+  metrics?: MetricTileData[];
+  class?: string;
+}
+
+const { metrics, class: className = '' } = Astro.props;
+const items = metrics ?? [];
+---
+
+{items.length > 0 && (
+  <div
+    class:list={['bp-metric-panel', className]}
+    data-count={items.length}
+    role="group"
+    aria-label="Project metrics"
+  >
+    {items.map((m) => (
+      <MetricTile label={m.label} value={m.value} unit={m.unit} />
+    ))}
+  </div>
+)}
+
+<style>
+  .bp-metric-panel {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .bp-metric-panel[data-count='2'] {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .bp-metric-panel[data-count='3'] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="bpgrid-about" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="currentColor" stroke-opacity="0.12" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <!-- Frame around avatar area -->
+  <rect x="40" y="40" width="240" height="240" fill="url(#bpgrid-about)" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3" fill-opacity="0" />
+
+  <!-- Measurement marks -->
+  <g stroke="currentColor" stroke-width="1" fill="none">
+    <line x1="40" y1="30" x2="280" y2="30" />
+    <line x1="40" y1="26" x2="40" y2="34" />
+    <line x1="280" y1="26" x2="280" y2="34" />
+    <text x="160" y="24" fill="currentColor" text-anchor="middle" font-family="ui-monospace, SF Mono, Menlo" font-size="10" stroke="none">240px</text>
+
+    <line x1="294" y1="40" x2="294" y2="280" />
+    <line x1="290" y1="40" x2="298" y2="40" />
+    <line x1="290" y1="280" x2="298" y2="280" />
+    <text x="310" y="165" fill="currentColor" text-anchor="middle" font-family="ui-monospace, SF Mono, Menlo" font-size="10" stroke="none" transform="rotate(90 310 165)">240px</text>
+  </g>
+
+  <!-- Avatar stylized circle + monogram -->
+  <g stroke="currentColor" stroke-width="1.5" fill="none">
+    <circle cx="160" cy="160" r="90" />
+    <circle cx="160" cy="130" r="32" />
+    <path d="M100 240 c0 -36 27 -60 60 -60 s60 24 60 60" />
+  </g>
+  <text x="160" y="170" fill="currentColor" text-anchor="middle" font-family="Inter, system-ui" font-size="54" font-weight="700" stroke="none">N</text>
+
+  <!-- Corner ticks -->
+  <g stroke="currentColor" stroke-width="1.5" fill="none">
+    <polyline points="40,56 40,40 56,40" />
+    <polyline points="264,40 280,40 280,56" />
+    <polyline points="40,264 40,280 56,280" />
+    <polyline points="264,280 280,280 280,264" />
+  </g>
+</svg>

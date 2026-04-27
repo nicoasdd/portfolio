@@ -1,0 +1,218 @@
+---
+import Icons from './blueprint/Icons.astro';
+import IconChip from './blueprint/IconChip.astro';
+import IsoIllustration from './blueprint/IsoIllustration.astro';
+import type {
+  AboutFrontmatter,
+  AvailabilityPill,
+} from '../content.config';
+import type { ResolvedContact } from '../lib/about';
+import { safeImagePath } from '../lib/assets';
+
+interface Props {
+  data: AboutFrontmatter;
+  availabilityPills: AvailabilityPill[];
+  contact: ResolvedContact;
+  effectiveAlt: string;
+}
+
+const { data, availabilityPills, contact, effectiveAlt } = Astro.props;
+const photoSrc = safeImagePath(data.photo);
+const initial = data.name.trim().charAt(0).toUpperCase() || 'N';
+
+function hostAndPath(url: string): string {
+  try {
+    const u = new URL(url);
+    return u.host + u.pathname.replace(/\/$/, '');
+  } catch {
+    return url;
+  }
+}
+---
+
+<section class="bp-about-hero" aria-labelledby="bp-about-hero-heading">
+  <div class="bp-about-hero__inner container-narrow">
+    <div class="bp-about-hero__text">
+      <p class="bp-eyebrow">About</p>
+      <h1 id="bp-about-hero-heading" class="bp-about-hero__name">{data.name}</h1>
+      <p class="bp-about-hero__role">{data.headline}</p>
+
+      {availabilityPills.length > 0 && (
+        <ul class="bp-about-hero__pills" role="list">
+          {availabilityPills.map((p) => (
+            <li role="listitem">
+              <IconChip icon={p.icon} label={p.label} />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <ul class="bp-about-hero__contacts" role="list">
+        {contact.email && (
+          <li role="listitem">
+            <a href={`mailto:${contact.email}`} class="bp-about-hero__contact">
+              <Icons name="messaging" size={18} />
+              <span>{contact.email}</span>
+            </a>
+          </li>
+        )}
+        {contact.github && (
+          <li role="listitem">
+            <a
+              href={contact.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="bp-about-hero__contact"
+            >
+              <Icons name="code" size={18} />
+              <span>{hostAndPath(contact.github)}</span>
+            </a>
+          </li>
+        )}
+        {contact.linkedin && (
+          <li role="listitem">
+            <a
+              href={contact.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="bp-about-hero__contact"
+            >
+              <Icons name="users" size={18} />
+              <span>{hostAndPath(contact.linkedin)}</span>
+            </a>
+          </li>
+        )}
+      </ul>
+    </div>
+
+    <div class="bp-about-hero__avatar" aria-hidden={data.photo ? undefined : 'true'}>
+      {data.photo ? (
+        <img
+          src={photoSrc}
+          alt={effectiveAlt}
+          loading="eager"
+          decoding="async"
+          width="320"
+          height="320"
+        />
+      ) : (
+        <div class="bp-about-hero__monogram" aria-hidden="true">{initial}</div>
+      )}
+      <div class="bp-about-hero__avatar-frame" aria-hidden="true">
+        <IsoIllustration variant="about" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bp-about-hero {
+    padding: 2.5rem 0 2rem;
+  }
+
+  .bp-about-hero__inner {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .bp-about-hero__inner {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+
+  .bp-about-hero__name {
+    font-size: var(--text-bp-hero);
+    line-height: 1;
+    margin: 0.5rem 0 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .bp-about-hero__role {
+    font-size: var(--text-bp-xl);
+    color: var(--bp-accent);
+    margin: 0 0 1.25rem;
+    font-weight: 500;
+  }
+
+  .bp-about-hero__pills,
+  .bp-about-hero__contacts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .bp-about-hero__pills {
+    margin-bottom: 1rem;
+  }
+
+  .bp-about-hero__contacts {
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .bp-about-hero__contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    font-size: var(--text-bp-sm);
+    color: var(--bp-text);
+    text-decoration: none;
+  }
+
+  .bp-about-hero__contact:hover {
+    color: var(--bp-accent);
+  }
+
+  .bp-about-hero__contact > :global(svg) {
+    color: var(--bp-accent);
+  }
+
+  .bp-about-hero__avatar {
+    position: relative;
+    display: none;
+    aspect-ratio: 1;
+    max-width: 320px;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .bp-about-hero__avatar {
+      display: block;
+    }
+  }
+
+  .bp-about-hero__avatar img,
+  .bp-about-hero__monogram {
+    position: absolute;
+    inset: 10%;
+    border-radius: var(--radius-bp-lg);
+    width: auto;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .bp-about-hero__monogram {
+    background: var(--bp-surface);
+    color: var(--bp-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6rem;
+    font-weight: 700;
+    border: 1px solid var(--bp-line);
+  }
+
+  .bp-about-hero__avatar-frame {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+</style>

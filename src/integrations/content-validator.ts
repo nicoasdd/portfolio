@@ -76,6 +76,8 @@ export default function contentValidator(): AstroIntegration {
           );
         }
 
+        const featuredWithoutRichData: string[] = [];
+
         for (const category of CATEGORIES) {
           const dir = join(root, 'src', 'content', 'projects', category);
           const files = listMarkdownFiles(dir);
@@ -93,7 +95,27 @@ export default function contentValidator(): AstroIntegration {
             if (thumbnail) imagePaths.push(thumbnail);
             const screenshots = fm.screenshots as string[] | undefined;
             if (Array.isArray(screenshots)) imagePaths.push(...screenshots);
+
+            // Soft nudge: if a project is featured but supplies neither metrics
+            // nor narrative, the large FeaturedProjectCard will still render but
+            // with reduced visual richness. Warn so authors can opt into the
+            // full treatment without surprise.
+            const isFeatured = String(fm.featured ?? '').trim() === 'true';
+            const hasMetrics = 'metrics' in fm;
+            const hasNarrative = 'narrative' in fm;
+            if (isFeatured && !hasMetrics && !hasNarrative) {
+              featuredWithoutRichData.push(file.replace(root + '/', ''));
+            }
           }
+        }
+
+        if (featuredWithoutRichData.length > 0) {
+          const list = featuredWithoutRichData.map((p) => `  - ${p}`).join('\n');
+          console.warn(
+            `[content-validator] ${featuredWithoutRichData.length} featured project(s) have no metrics or narrative blocks:\n${list}\n` +
+              `Add frontmatter 'metrics', 'narrative.challenge', 'narrative.built', 'narrative.impact', or 'architecture' ` +
+              `to light up the large featured-card blocks on category pages.`,
+          );
         }
 
         assertNoCollisions(sources);
@@ -138,6 +160,21 @@ export default function contentValidator(): AstroIntegration {
         if (aboutPhoto) imagePaths.push(aboutPhoto);
 
         const aboutSkillsCount = Array.isArray(aboutFm.skills) ? aboutFm.skills.length : 0;
+
+        const siteDir = join(root, 'src', 'content', 'site');
+        const siteFiles = listMarkdownFiles(siteDir);
+        if (siteFiles.length === 0) {
+          throw new Error(
+            '[content-validator] Site content is required at src/content/site/site.md but no .md file was found. ' +
+              "Restore the seed from 'specs/005-blueprint-redesign/data-model.md' §3.",
+          );
+        }
+        if (siteFiles.length > 1) {
+          const paths = siteFiles.map((f) => f.replace(root + '/', '')).join(', ');
+          throw new Error(
+            `[content-validator] Expected exactly one Site entry under src/content/site/, found ${siteFiles.length}: ${paths}`,
+          );
+        }
 
         const missing = getMissingImages(imagePaths);
         if (missing.length > 0) {

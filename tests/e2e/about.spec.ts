@@ -25,19 +25,23 @@ function readLiveAboutFrontmatter() {
   const skills = skillsBlock
     ? Array.from(skillsBlock[1].matchAll(/- "([^"]+)"/g)).map((m) => m[1])
     : [];
+  const emailMatch = fm.match(/^email:\s*"([^"]+)"/m);
 
   return {
     headline: headlineMatch?.[1] ?? '',
     name: nameMatch?.[1] ?? '',
     skills,
+    email: emailMatch?.[1] ?? '',
   };
 }
 
-test.describe('US1: About page — recruiter discovers who the owner is', () => {
+test.describe('US3: About page chrome and cross-page navigation', () => {
   test('header "About" link is reachable from / and navigates to /about/', async ({ page }) => {
     await page.goto('/');
     await openPrimaryNav(page);
-    const aboutLink = page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'About' });
+    const aboutLink = page
+      .getByRole('navigation', { name: 'Primary' })
+      .getByRole('link', { name: 'About' });
     await expect(aboutLink).toBeVisible();
     await aboutLink.click();
     await expect(page).toHaveURL(/\/about\/?$/);
@@ -53,49 +57,6 @@ test.describe('US1: About page — recruiter discovers who the owner is', () => 
     await expect(page).toHaveURL(/\/about\/?$/);
   });
 
-  test('header "About" link is reachable from a project detail page', async ({ page }) => {
-    await page.goto('/projects/example-personal/');
-    await openPrimaryNav(page);
-    await page
-      .getByRole('navigation', { name: 'Primary' })
-      .getByRole('link', { name: 'About' })
-      .click();
-    await expect(page).toHaveURL(/\/about\/?$/);
-  });
-
-  test('about page renders required content above the fold', async ({ page }) => {
-    await page.goto('/about/');
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByRole('img', { name: /portrait of/i })).toBeVisible();
-    await expect(page.getByRole('region', { name: /skills/i })).toBeVisible();
-    const skillChips = page.getByRole('region', { name: /skills/i }).getByRole('listitem');
-    expect(await skillChips.count()).toBeGreaterThan(0);
-    await expect(page.getByRole('link', { name: /^email/i }).first()).toBeVisible();
-  });
-
-  test('email link uses mailto: scheme', async ({ page }) => {
-    await page.goto('/about/');
-    const emailLink = page.getByRole('link', { name: /^email/i }).first();
-    const href = await emailLink.getAttribute('href');
-    expect(href).toMatch(/^mailto:/);
-  });
-
-  test('social links open in a new tab with safe rel attributes', async ({ page }) => {
-    await page.goto('/about/');
-    const socialLinks = page
-      .getByRole('region', { name: /social|elsewhere/i })
-      .getByRole('link');
-    const count = await socialLinks.count();
-    expect(count).toBeGreaterThan(0);
-    for (let i = 0; i < count; i++) {
-      const link = socialLinks.nth(i);
-      await expect(link).toHaveAttribute('target', '_blank');
-      const rel = (await link.getAttribute('rel')) ?? '';
-      expect(rel).toContain('noopener');
-      expect(rel).toContain('noreferrer');
-    }
-  });
-
   test('header "About" link is marked aria-current=page when on /about/', async ({ page }) => {
     await page.goto('/about/');
     await openPrimaryNav(page);
@@ -106,45 +67,73 @@ test.describe('US1: About page — recruiter discovers who the owner is', () => 
   });
 });
 
-test.describe('US2: Landing page teaser drives About discovery', () => {
-  test('landing page renders the AboutTeaser region with name, intro and CTA', async ({ page }) => {
-    await page.goto('/');
-    const teaser = page.getByRole('region', { name: /about the author|about/i });
-    await expect(teaser).toBeVisible();
-    await expect(teaser.getByRole('heading', { level: 2 })).toBeVisible();
-    const cta = teaser.getByRole('link', { name: /more about|learn more|read more|about/i });
-    await expect(cta).toBeVisible();
-  });
-
-  test('teaser CTA navigates to /about/', async ({ page }) => {
-    await page.goto('/');
-    const teaser = page.getByRole('region', { name: /about the author|about/i });
-    const cta = teaser.getByRole('link', { name: /more about|learn more|read more|about/i });
-    await cta.click();
-    await expect(page).toHaveURL(/\/about\/?$/);
-  });
-});
-
-test.describe('US3: Live profile.md is the source of truth for /about/', () => {
-  test('rendered headline matches the value in src/content/about/profile.md', async ({ page }) => {
-    const { headline } = readLiveAboutFrontmatter();
-    expect(headline.length).toBeGreaterThan(0);
+test.describe('US3: About page identity hero', () => {
+  test('renders ABOUT eyebrow, name H1, and role subtitle', async ({ page }) => {
     await page.goto('/about/');
+    const { name, headline } = readLiveAboutFrontmatter();
+    await expect(page.getByText(/^about$/i).first()).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(name);
     await expect(page.getByText(headline, { exact: true }).first()).toBeVisible();
   });
 
-  test('rendered skill chip count matches the skills array length in profile.md', async ({ page }) => {
+  test('renders at least one availability pill', async ({ page }) => {
+    await page.goto('/about/');
+    const hero = page.locator('section[aria-labelledby="bp-about-hero-heading"]');
+    const pills = hero.locator('.bp-about-hero__pills li');
+    expect(await pills.count()).toBeGreaterThan(0);
+  });
+
+  test('renders email / github / linkedin contact lines', async ({ page }) => {
+    await page.goto('/about/');
+    const { email } = readLiveAboutFrontmatter();
+    const mailLink = page.locator(`a[href="mailto:${email}"]`).first();
+    await expect(mailLink).toBeVisible();
+    const ghLink = page.locator('a[href^="https://github.com/"]').first();
+    await expect(ghLink).toBeVisible();
+    const liLink = page.locator('a[href^="https://www.linkedin.com/"]').first();
+    await expect(liLink).toBeVisible();
+  });
+});
+
+test.describe('US3: About page content blocks', () => {
+  test('Skills section renders a chip per skill in profile.md', async ({ page }) => {
     const { skills } = readLiveAboutFrontmatter();
     expect(skills.length).toBeGreaterThan(0);
     await page.goto('/about/');
-    const chips = page.getByRole('region', { name: /skills/i }).getByRole('listitem');
+    const region = page.getByRole('region', { name: /skills/i });
+    await expect(region).toBeVisible();
+    const chips = region.getByRole('listitem');
     await expect(chips).toHaveCount(skills.length);
   });
 
-  test('rendered name on /about/ matches the value in profile.md', async ({ page }) => {
-    const { name } = readLiveAboutFrontmatter();
-    expect(name.length).toBeGreaterThan(0);
+  test('What I care about grid renders when values are populated', async ({ page }) => {
     await page.goto('/about/');
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(name);
+    const values = page.getByRole('region', { name: /what i care about/i });
+    await expect(values).toBeVisible();
+    const cards = values.getByRole('listitem');
+    expect(await cards.count()).toBeGreaterThan(0);
+  });
+
+  test('Why work with me banner renders the 5-step process flow', async ({ page }) => {
+    await page.goto('/about/');
+    const banner = page.getByRole('region', { name: /why work with me/i });
+    await expect(banner).toBeVisible();
+    const steps = banner.locator('.bp-process__step');
+    await expect(steps).toHaveCount(5);
+  });
+
+  test('Elsewhere block renders one card per external profile', async ({ page }) => {
+    await page.goto('/about/');
+    const elsewhere = page.getByRole('region', { name: /elsewhere/i });
+    await expect(elsewhere).toBeVisible();
+    const cards = elsewhere.getByRole('listitem');
+    expect(await cards.count()).toBeGreaterThanOrEqual(2);
+  });
+
+  test('bio body prose is rendered from Markdown', async ({ page }) => {
+    await page.goto('/about/');
+    const bio = page.getByRole('region', { name: /about me/i });
+    await expect(bio).toBeVisible();
+    await expect(bio.locator('p').first()).toBeVisible();
   });
 });

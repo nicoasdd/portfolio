@@ -1,42 +1,54 @@
 ---
+import PillChip from './blueprint/PillChip.astro';
 import { CATEGORY_KEYS, CATEGORY_LABELS } from '../content.config';
 import { withBase } from '../lib/url';
 
-interface Props {
-  showAll?: boolean;
-  ariaLabel?: string;
-}
-
-const { showAll = true, ariaLabel = 'Project categories' } = Astro.props;
 const pathname = Astro.url.pathname;
 const homeHref = withBase('/');
+const isActive = (href: string) =>
+  href === homeHref ? pathname === homeHref : pathname.startsWith(href);
 
-const items = [
-  ...(showAll ? [{ href: homeHref, label: 'All', active: pathname === homeHref }] : []),
-  ...CATEGORY_KEYS.map((cat) => {
-    const href = withBase(`/category/${cat}/`);
-    return { href, label: CATEGORY_LABELS[cat], active: pathname.startsWith(href) };
-  }),
+const filters: Array<{ href: string; label: string }> = [
+  { href: homeHref, label: 'All' },
+  ...CATEGORY_KEYS.map((cat) => ({
+    href: withBase(`/category/${cat}/`),
+    label: CATEGORY_LABELS[cat],
+  })),
 ];
 ---
 
-<nav aria-label={ariaLabel} class="my-6">
-  <ul class="flex flex-wrap items-center gap-2 list-none m-0 p-0">
-    {items.map((item) => (
-      <li>
-        <a
-          href={item.href}
-          class:list={[
-            'inline-block px-4 py-2 rounded-full border text-sm font-medium no-underline transition-colors',
-            item.active
-              ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]'
-              : 'bg-transparent text-[var(--color-text)] border-[var(--color-border)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]',
-          ]}
-          aria-current={item.active ? 'page' : undefined}
-        >
-          {item.label}
-        </a>
-      </li>
-    ))}
+<nav aria-label="Filter projects by category" class="bp-filter-nav">
+  <ul role="list" class="bp-filter-nav__list">
+    {filters.map((f) => {
+      const active = isActive(f.href);
+      return (
+        <li role="listitem">
+          <PillChip
+            as="a"
+            href={f.href}
+            active={active}
+            ariaCurrent={active ? 'page' : undefined}
+          >
+            {f.label}
+          </PillChip>
+        </li>
+      );
+    })}
   </ul>
 </nav>
+
+<style>
+  .bp-filter-nav {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .bp-filter-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>

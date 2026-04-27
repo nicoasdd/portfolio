@@ -131,6 +131,31 @@ cp templates/project.md src/content/projects/<category>/<slug>.md
 
 Optional: `slug` (override filename), `screenshots[]`, `links.{source,live,caseStudy}`, `featured`, `order`, `draft`.
 
+**Blueprint optional fields** (light up the rich featured-card treatment on category pages — all optional, all additive):
+
+| Field | Description |
+|---|---|
+| `impactTagline` | Short tagline shown above the project title on cards. Falls back to `description` if absent. |
+| `highlightMetric` | `{ label, value, trend?: up \| down \| flat }` — small metric + sparkline on the compact card. |
+| `metrics` | Array of up to 3 `{ label, value, unit? }` — drives the 3-tile metric panel on the large featured card. |
+| `narrative` | `{ challenge?: [], built?: [], impact?: [] }` — each an array of up to 4 short bullets, rendered as a 3-column CHALLENGE / BUILT / IMPACT band. |
+| `architecture` | Array of 2–8 `{ label, icon, note? }` nodes — drives the blueprint architecture strip. `icon` must be one of `users \| api \| db \| cache \| queue \| server \| web \| messaging \| blockchain \| cloud`. |
+
+Projects that omit these fields simply render in the compact card style; no UI breaks. See `src/content/projects/personal/csgo-try.md` and `src/content/projects/corporate/mercadolibre-billing-engine.md` for worked examples.
+
+### About page blueprint fields
+
+`src/content/about/profile.md` also accepts additive optional fields (all live in `aboutSchema` under [`src/content.config.ts`](./src/content.config.ts)):
+
+- `availabilityPills: [{ icon, label }]` — pill row on the identity hero (`icon` ∈ `remote, onsite, hybrid, collab, opportunities, contract, sparkle`). Falls back to deriving a pill from `location` + `availability` when absent.
+- `values: [{ icon, title, body }]` — the "What I care about" 4-up grid (`icon` ∈ `craft, performance, accessibility, pragmatism, security, systems`). Section is hidden when empty.
+- `process: [a, b, c, d, e]` + `processStatement: "..."` — drives the "Why work with me" 5-step banner. Must be exactly 5 strings when supplied.
+- `contact: { email?, github?, linkedin? }` — optional override for the hero contact lines. When absent, falls back to top-level `email` and matching `socialLinks`.
+
+### Landing-page rails (`src/content/site/site.md`)
+
+A single-document collection controls the home credibility strip, the footer systems strip, and the per-category mission copy. Edit this file to change any of those — no code changes required.
+
 The full schema lives in [`src/content.config.ts`](./src/content.config.ts).
 
 ### 3. Add image assets
@@ -376,7 +401,8 @@ src/
 │   ├── projects/{personal,startup,corporate}/*.md   # Project content
 │   └── about/profile.md                             # About content (single entry)
 ├── content.config.ts                                # Zod schemas + collections
-├── components/   # Hero, ProjectCard, ProjectGrid, CategoryNav, AboutTeaser, SkillsList, SocialLinks, ...
+├── components/   # Hero, ProjectCard, FeaturedProjectCard, ProjectGrid, CategoryNav, CategoryHero, AboutHero, ValueGrid, ProcessBanner, ElsewhereList, CredibilityStrip, ThemeToggle, SkillsList, SocialLinks, ...
+│   └── blueprint/  # CornerFrame, IndexNumber, PillChip, IconChip, Icons, MetricTile, MetricPanel, SparklineGlyph, ArchitectureStrip, IsoIllustration, SystemsStrip
 ├── layouts/      # BaseLayout, ProjectLayout
 ├── lib/          # projects, about, sort, slug, assets, url, env, examples helpers
 ├── integrations/ # build-time content validator

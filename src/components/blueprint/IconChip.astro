@@ -1,0 +1,50 @@
+---
+import Icons from './Icons.astro';
+
+interface Props {
+  icon: string;
+  label: string;
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { icon, label, size = 'md', class: className = '' } = Astro.props;
+const iconSize = size === 'sm' ? 16 : 18;
+---
+
+<span class:list={['bp-icon-chip', `bp-icon-chip--${size}`, className]}>
+  <span class="bp-icon-chip__icon" aria-hidden="true">
+    <Icons name={icon} size={iconSize} />
+  </span>
+  <span class="bp-icon-chip__label">{label}</span>
+</span>
+
+<style>
+  .bp-icon-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-sm);
+    background: color-mix(in srgb, var(--bp-surface) 75%, transparent);
+    color: var(--bp-text);
+    white-space: nowrap;
+    font-family: var(--font-bp-sans);
+    font-weight: 500;
+  }
+
+  .bp-icon-chip--sm {
+    padding: 0.35rem 0.6rem;
+    font-size: var(--text-bp-xs);
+  }
+
+  .bp-icon-chip--md {
+    padding: 0.55rem 0.85rem;
+    font-size: var(--text-bp-sm);
+  }
+
+  .bp-icon-chip__icon {
+    display: inline-flex;
+    color: var(--bp-accent);
+  }
+</style>

@@ -1,4 +1,5 @@
 ---
+import CornerFrame from './blueprint/CornerFrame.astro';
 import { safeImagePath } from '../lib/assets';
 
 interface Props {
@@ -10,19 +11,53 @@ const { screenshots, projectTitle } = Astro.props;
 ---
 
 {screenshots.length > 0 && (
-  <section aria-label={`${projectTitle} screenshots`} class="my-10">
-    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 list-none m-0 p-0">
+  <section aria-label={`${projectTitle} screenshots`} class="bp-screenshots">
+    <ul class="bp-screenshots__list">
       {screenshots.map((src, i) => (
-        <li class="rounded-lg overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
-          <img
-            src={safeImagePath(src)}
-            alt={`${projectTitle} screenshot ${i + 1}`}
-            loading="lazy"
-            decoding="async"
-            class="w-full h-auto"
-          />
+        <li>
+          <CornerFrame padding="none" class="bp-screenshots__item">
+            <img
+              src={safeImagePath(src)}
+              alt={`${projectTitle} screenshot ${i + 1}`}
+              loading="lazy"
+              decoding="async"
+              class="bp-screenshots__img"
+            />
+          </CornerFrame>
         </li>
       ))}
     </ul>
   </section>
 )}
+
+<style>
+  .bp-screenshots {
+    margin: 2rem 0;
+  }
+
+  .bp-screenshots__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .bp-screenshots__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .bp-screenshots__item {
+    overflow: hidden;
+  }
+
+  .bp-screenshots__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: calc(var(--radius-bp-lg) - 1px);
+  }
+</style>

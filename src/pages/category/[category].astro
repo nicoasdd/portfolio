@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CategoryHero from '../../components/CategoryHero.astro';
 import CategoryNav from '../../components/CategoryNav.astro';
+import FeaturedProjectCard from '../../components/FeaturedProjectCard.astro';
 import ProjectGrid from '../../components/ProjectGrid.astro';
-import AboutTeaser from '../../components/AboutTeaser.astro';
 import { CATEGORY_KEYS, CATEGORY_LABELS, type CategoryKey } from '../../content.config';
 import { getByCategory } from '../../lib/projects';
 
@@ -20,25 +21,47 @@ interface Props {
 const { category } = Astro.props;
 const projects = await getByCategory(category);
 const label = CATEGORY_LABELS[category];
+const featured = projects.filter((p) => p.entry.data.featured);
+const rest = projects.filter((p) => !p.entry.data.featured);
 ---
 
 <BaseLayout
   title={`${label} projects`}
   description={`${label} projects — a curated list of ${label.toLowerCase()} work in this portfolio.`}
 >
-  <section class="container-narrow pt-12 pb-4">
-    <p class="text-sm uppercase tracking-wide text-[var(--color-text-muted)] m-0">Category</p>
-    <h1 class="text-4xl md:text-5xl font-bold tracking-tight mt-2 m-0">{label} projects</h1>
-    <p class="mt-4 max-w-2xl text-lg text-[var(--color-text-muted)]">
-      {projects.length === 0
-        ? `No ${label.toLowerCase()} projects published yet.`
-        : `${projects.length} ${label.toLowerCase()} project${projects.length === 1 ? '' : 's'}.`}
-    </p>
+  <CategoryHero category={category} />
+
+  <div class="container-narrow">
     <CategoryNav />
-  </section>
+
+    {featured.length > 0 && (
+      <section aria-labelledby="featured-label" class="bp-featured-band">
+        <h2 id="featured-label" class="bp-eyebrow">
+          Featured {label.toLowerCase()} projects
+        </h2>
+        {featured.map((p, i) => (
+          <FeaturedProjectCard project={p} index={i + 1} />
+        ))}
+      </section>
+    )}
+  </div>
+
   <ProjectGrid
-    projects={projects}
+    projects={rest.length > 0 ? rest : featured.length === 0 ? projects : []}
+    heading={featured.length > 0 ? `More ${label.toLowerCase()} projects` : `${label} projects`}
+    headingId="projects"
     emptyMessage={`No ${label.toLowerCase()} projects published yet — add a Markdown file under src/content/projects/${category}/.`}
+    startIndex={featured.length + 1}
   />
-  <AboutTeaser />
 </BaseLayout>
+
+<style>
+  .bp-featured-band {
+    padding: 1rem 0 0.5rem;
+  }
+
+  .bp-featured-band .bp-eyebrow {
+    display: block;
+    margin-bottom: 1rem;
+  }
+</style>

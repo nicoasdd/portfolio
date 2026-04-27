@@ -1,17 +1,254 @@
 ---
-const year = new Date().getFullYear();
+import SystemsStrip from './blueprint/SystemsStrip.astro';
+import Icons from './blueprint/Icons.astro';
+import { getAbout } from '../lib/about';
+import { withBase } from '../lib/url';
+
+let name = 'Nico';
+let headline = 'Senior Frontend Engineer & Product Builder';
+let intro =
+  'I turn complex problems into clean, scalable products. I care about performance, developer experience, and real business impact.';
+let email = '';
+let githubUrl: string | null = null;
+let linkedinUrl: string | null = null;
+
+try {
+  const profile = await getAbout();
+  const d = profile.data;
+  name = d.name;
+  headline = d.headline;
+  intro = d.intro;
+  email = d.email;
+  const gh = d.socialLinks.find((s) => s.icon === 'github')?.url ?? d.contact?.github;
+  const li = d.socialLinks.find((s) => s.icon === 'linkedin')?.url ?? d.contact?.linkedin;
+  githubUrl = gh ?? null;
+  linkedinUrl = li ?? null;
+} catch {
+  /* fall back to defaults above */
+}
+
+const aboutHref = withBase('/about/');
+const initial = name.trim().charAt(0).toUpperCase() || 'N';
+
+function hostAndPath(url: string): string {
+  try {
+    const u = new URL(url);
+    return u.host + u.pathname.replace(/\/$/, '');
+  } catch {
+    return url;
+  }
+}
 ---
 
-<footer class="border-t border-[var(--color-border)] mt-24">
-  <div class="container-narrow py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[var(--color-text-muted)]">
-    <p class="m-0">© {year} Portfolio. Built with Astro.</p>
-    <ul class="flex items-center gap-4 list-none m-0 p-0">
-      <li>
-        <a href="https://github.com/" rel="noopener" class="no-underline hover:underline">GitHub</a>
-      </li>
-      <li>
-        <a href="mailto:hello@example.com" class="no-underline hover:underline">Email</a>
-      </li>
-    </ul>
+<footer class="bp-footer">
+  <div class="container-narrow">
+    <div class="bp-footer__author">
+      <div class="bp-footer__monogram" aria-hidden="true">{initial}</div>
+      <div class="bp-footer__text">
+        <h2 class="bp-footer__name">{name}</h2>
+        <p class="bp-footer__headline">{headline}</p>
+        <p class="bp-footer__intro">{intro}</p>
+      </div>
+      <div class="bp-footer__links">
+        {githubUrl && (
+          <a
+            class="bp-footer__link"
+            href={githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${name} on GitHub`}
+          >
+            <span class="bp-footer__link-label">
+              <span class="bp-footer__link-title">GitHub</span>
+              <span class="bp-footer__link-url">{hostAndPath(githubUrl)}</span>
+            </span>
+            <Icons name="code" size={16} />
+          </a>
+        )}
+        {linkedinUrl && (
+          <a
+            class="bp-footer__link"
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${name} on LinkedIn`}
+          >
+            <span class="bp-footer__link-label">
+              <span class="bp-footer__link-title">LinkedIn</span>
+              <span class="bp-footer__link-url">{hostAndPath(linkedinUrl)}</span>
+            </span>
+            <Icons name="users" size={16} />
+          </a>
+        )}
+      </div>
+      <div class="bp-footer__cta">
+        {email && (
+          <a class="bp-footer__cta-btn bp-footer__cta-btn--primary" href={`mailto:${email}`}>
+            Discuss a project →
+          </a>
+        )}
+        <a class="bp-footer__cta-btn" href={aboutHref}>About me</a>
+      </div>
+    </div>
+
+    <SystemsStrip />
+
+    <p class="bp-footer__tagline" aria-hidden="true">
+      CLEAR HIERARCHY. IMPACT FIRST. RECRUITER FRIENDLY.
+    </p>
   </div>
 </footer>
+
+<style>
+  .bp-footer {
+    margin-top: 4rem;
+    padding-bottom: 2rem;
+    color: var(--bp-text);
+  }
+
+  .bp-footer__author {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'mono text'
+      'links links'
+      'cta cta';
+    align-items: start;
+    padding: 2rem 0;
+    border-top: 1px dashed var(--bp-line);
+  }
+
+  @media (min-width: 1024px) {
+    .bp-footer__author {
+      grid-template-columns: auto 1.3fr 1fr auto;
+      grid-template-areas: 'mono text links cta';
+      align-items: center;
+      gap: 2rem;
+    }
+  }
+
+  .bp-footer__monogram {
+    grid-area: mono;
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-md);
+    background: var(--bp-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-bp-sans);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--bp-accent);
+  }
+
+  .bp-footer__text {
+    grid-area: text;
+  }
+
+  .bp-footer__name {
+    font-size: var(--text-bp-2xl);
+    margin: 0;
+  }
+
+  .bp-footer__headline {
+    font-size: var(--text-bp-sm);
+    color: var(--bp-accent);
+    margin: 0.25rem 0;
+    font-weight: 500;
+  }
+
+  .bp-footer__intro {
+    font-size: var(--text-bp-sm);
+    color: var(--bp-text-mut);
+    margin: 0.5rem 0 0;
+    max-width: 48ch;
+  }
+
+  .bp-footer__links {
+    grid-area: links;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .bp-footer__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-md);
+    background: var(--bp-surface);
+    color: var(--bp-text);
+    text-decoration: none;
+    font-size: var(--text-bp-sm);
+  }
+
+  .bp-footer__link:hover {
+    border-color: var(--bp-accent);
+    color: var(--bp-accent);
+  }
+
+  .bp-footer__link-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .bp-footer__link-title {
+    font-weight: 600;
+  }
+
+  .bp-footer__link-url {
+    font-size: var(--text-bp-xs);
+    color: var(--bp-text-mut);
+    font-family: var(--font-bp-mono);
+  }
+
+  .bp-footer__cta {
+    grid-area: cta;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .bp-footer__cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-md);
+    background: transparent;
+    color: var(--bp-text);
+    font-size: var(--text-bp-sm);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .bp-footer__cta-btn--primary {
+    background: var(--bp-accent);
+    color: var(--bp-accent-contrast);
+    border-color: var(--bp-accent);
+  }
+
+  .bp-footer__cta-btn--primary:hover {
+    background: var(--bp-accent-hover);
+    border-color: var(--bp-accent-hover);
+    color: var(--bp-accent-contrast);
+  }
+
+  .bp-footer__tagline {
+    text-align: center;
+    margin: 1.5rem 0 0;
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    color: var(--bp-text-mut);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+</style>

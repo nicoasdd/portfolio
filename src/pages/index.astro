@@ -1,26 +1,33 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
-import CategoryNav from '../components/CategoryNav.astro';
+import CredibilityStrip from '../components/CredibilityStrip.astro';
 import ProjectGrid from '../components/ProjectGrid.astro';
-import AboutTeaser from '../components/AboutTeaser.astro';
 import { getAllProjects, getFeatured } from '../lib/projects';
 
 const featured = await getFeatured();
 const all = await getAllProjects();
-const showcase = featured.length > 0 ? featured : all.slice(0, 6);
+const showcase = (featured.length > 0 ? featured : all).slice(0, 6);
 ---
 
 <BaseLayout title="Portfolio">
   <Hero />
-  <div class="container-narrow">
-    <CategoryNav />
+
+  <div class="container-narrow bp-home-credibility">
+    <CredibilityStrip />
   </div>
+
   <ProjectGrid
     projects={showcase}
-    heading={featured.length > 0 ? 'Featured projects' : 'Recent projects'}
-    headingId="projects"
+    heading="Featured Projects"
+    headingId="featured-projects"
     emptyMessage="No projects published yet — add your first Markdown file under src/content/projects/."
+    viewAllHref="/category/personal/"
   />
-  <AboutTeaser />
 </BaseLayout>
+
+<style>
+  .bp-home-credibility {
+    margin-top: 0.5rem;
+  }
+</style>

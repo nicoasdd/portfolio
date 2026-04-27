@@ -1,0 +1,94 @@
+---
+import Icons from './Icons.astro';
+import type { ArchitectureNode } from '../../content.config';
+
+interface Props {
+  nodes?: ArchitectureNode[];
+  class?: string;
+}
+
+const { nodes, class: className = '' } = Astro.props;
+const items = nodes ?? [];
+const render = items.length >= 2;
+---
+
+{render && (
+  <div class:list={['bp-arch-strip', className]} role="group" aria-label="Architecture diagram">
+    {items.map((node, idx) => (
+      <>
+        <div class="bp-arch-node">
+          <span class="bp-arch-node__icon" aria-hidden="true">
+            <Icons name={node.icon} size={22} />
+          </span>
+          <span class="bp-arch-node__label">{node.label}</span>
+          {node.note && <span class="bp-arch-node__note">{node.note}</span>}
+        </div>
+        {idx < items.length - 1 && (
+          <span class="bp-arch-arrow" aria-hidden="true">
+            <svg width="28" height="12" viewBox="0 0 28 12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="0" y1="6" x2="22" y2="6" stroke-dasharray="3 3" />
+              <polyline points="18,2 24,6 18,10" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            </svg>
+          </span>
+        )}
+      </>
+    ))}
+  </div>
+)}
+
+<style>
+  .bp-arch-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 1.25rem;
+    border: 1px dashed var(--bp-line);
+    border-radius: var(--radius-bp-lg);
+    background: color-mix(in srgb, var(--bp-surface) 50%, transparent);
+  }
+
+  .bp-arch-node {
+    flex: 1 1 110px;
+    min-width: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.75rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-md);
+    background: var(--bp-surface);
+    gap: 0.35rem;
+  }
+
+  .bp-arch-node__icon {
+    color: var(--bp-accent);
+  }
+
+  .bp-arch-node__label {
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--bp-text);
+  }
+
+  .bp-arch-node__note {
+    font-size: 0.65rem;
+    color: var(--bp-text-mut);
+  }
+
+  .bp-arch-arrow {
+    display: inline-flex;
+    align-items: center;
+    color: var(--bp-accent);
+  }
+
+  @media (max-width: 767px) {
+    .bp-arch-arrow {
+      transform: rotate(90deg);
+    }
+  }
+</style>

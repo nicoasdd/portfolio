@@ -1,0 +1,154 @@
+---
+import Icons from './blueprint/Icons.astro';
+
+interface Props {
+  steps: string[] | null;
+  statement: string | null;
+}
+
+const { steps, statement } = Astro.props;
+const render = Array.isArray(steps) && steps.length === 5;
+
+const STEP_ICONS = ['api', 'design', 'code', 'systems', 'sparkle'] as const;
+const defaultStatement =
+  "I bring a product mindset and engineering discipline to every project. I communicate clearly, take ownership, and make the complex feel simple.";
+---
+
+{render && (
+  <section class="bp-process" aria-labelledby="bp-process-heading">
+    <div class="bp-process__inner">
+      <div class="bp-process__text">
+        <h2 id="bp-process-heading" class="bp-process__heading">
+          <span class="bp-process__check" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M8 12l3 3 5-6" />
+            </svg>
+          </span>
+          Why work with me
+        </h2>
+        <p class="bp-process__statement">{statement ?? defaultStatement}</p>
+      </div>
+      <ol class="bp-process__steps" role="list">
+        {steps!.map((step, i) => (
+          <li role="listitem" class="bp-process__step">
+            <span class="bp-process__step-glyph" aria-hidden="true">
+              <Icons name={STEP_ICONS[i]} size={22} />
+            </span>
+            <span class="bp-process__step-label">{step}</span>
+            {i < steps!.length - 1 && (
+              <span class="bp-process__step-arrow" aria-hidden="true">
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <line x1="0" y1="6" x2="12" y2="6" stroke-dasharray="3 3" />
+                  <polyline points="9,2 14,6 9,10" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+)}
+
+<style>
+  .bp-process {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-lg);
+    background: color-mix(in srgb, var(--bp-surface) 80%, transparent);
+  }
+
+  .bp-process__inner {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .bp-process__inner {
+      grid-template-columns: 1fr 1.3fr;
+    }
+  }
+
+  .bp-process__heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-bp-xl);
+    margin: 0 0 0.5rem;
+  }
+
+  .bp-process__check {
+    color: var(--bp-accent);
+    display: inline-flex;
+  }
+
+  .bp-process__statement {
+    margin: 0;
+    font-size: var(--text-bp-sm);
+    color: var(--bp-text-mut);
+    line-height: 1.6;
+    max-width: 48ch;
+  }
+
+  .bp-process__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .bp-process__steps {
+      justify-content: flex-end;
+    }
+  }
+
+  .bp-process__step {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-direction: column;
+    min-width: 72px;
+  }
+
+  .bp-process__step-glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--bp-line);
+    border-radius: 50%;
+    color: var(--bp-accent);
+  }
+
+  .bp-process__step-label {
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--bp-text);
+  }
+
+  .bp-process__step-arrow {
+    position: absolute;
+    color: var(--bp-accent);
+  }
+
+  .bp-process__step {
+    position: relative;
+  }
+
+  .bp-process__step-arrow {
+    position: static;
+    margin-left: 0.25rem;
+  }
+</style>

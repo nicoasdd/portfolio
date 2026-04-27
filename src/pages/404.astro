@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectGrid from '../components/ProjectGrid.astro';
+import IndexNumber from '../components/blueprint/IndexNumber.astro';
+import PillChip from '../components/blueprint/PillChip.astro';
 import { getAllProjects } from '../lib/projects';
 import { withBase } from '../lib/url';
 
@@ -8,28 +10,70 @@ const recent = (await getAllProjects()).slice(0, 3);
 const homeHref = withBase('/');
 ---
 
-<BaseLayout title="Page not found" description="The page you were looking for could not be found." noindex>
-  <section class="container-narrow pt-20 pb-12 text-center">
-    <p class="text-sm uppercase tracking-wide text-[var(--color-text-muted)] m-0">404</p>
-    <h1 class="text-4xl md:text-5xl font-bold tracking-tight mt-2 m-0">Page not found</h1>
-    <p class="mt-4 text-lg text-[var(--color-text-muted)] max-w-xl mx-auto">
+<BaseLayout
+  title="Page not found"
+  description="The page you were looking for could not be found."
+  noindex
+>
+  <section class="bp-404 container-narrow">
+    <p class="bp-eyebrow">Error 404</p>
+    <div class="bp-404__heading">
+      <IndexNumber n={404} />
+      <h1>Page not found</h1>
+    </div>
+    <p class="bp-404__desc">
       The page you were looking for could not be found. It may have moved, or you
       may have followed an outdated link.
     </p>
-    <div class="mt-8">
-      <a
-        href={homeHref}
-        class="inline-flex items-center justify-center rounded-full bg-[var(--color-accent)] text-white font-semibold px-6 py-3 no-underline hover:bg-[var(--color-accent-hover)]"
-      >
-        Back to home
-      </a>
+    <div class="bp-404__cta">
+      <PillChip as="a" href={homeHref} active>Back to home</PillChip>
     </div>
   </section>
+
   {recent.length > 0 && (
     <ProjectGrid
       projects={recent}
       heading="Or check out a recent project"
       headingId="recent"
+      startIndex={1}
     />
   )}
 </BaseLayout>
+
+<style>
+  .bp-404 {
+    padding: 5rem 1rem 3rem;
+    text-align: center;
+  }
+
+  .bp-404 .bp-eyebrow {
+    display: inline-flex;
+    margin: 0 auto 1rem;
+  }
+
+  .bp-404__heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .bp-404__heading h1 {
+    font-size: var(--text-bp-hero);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .bp-404__desc {
+    max-width: 48ch;
+    margin: 0 auto 2rem;
+    color: var(--bp-text-mut);
+    font-size: var(--text-bp-lg);
+    line-height: 1.55;
+  }
+
+  .bp-404__cta {
+    display: inline-flex;
+  }
+</style>

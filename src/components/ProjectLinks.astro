@@ -1,4 +1,6 @@
 ---
+import PillChip from './blueprint/PillChip.astro';
+
 interface Props {
   links: {
     source?: string;
@@ -12,28 +14,33 @@ const items: { href: string; label: string }[] = [];
 if (links.live) items.push({ href: links.live, label: 'Live demo' });
 if (links.source) items.push({ href: links.source, label: 'Source code' });
 if (links.caseStudy) items.push({ href: links.caseStudy, label: 'Case study' });
-
 const hasAny = items.length > 0;
 ---
 
 {hasAny && (
-  <nav aria-label="Project links">
-    <ul class="flex flex-wrap items-center gap-3 list-none m-0 p-0">
+  <nav aria-label="Project links" class="bp-project-links">
+    <ul role="list">
       {items.map((item) => (
-        <li>
-          <a
-            href={item.href}
-            rel="noopener noreferrer"
-            target="_blank"
-            class="inline-flex items-center gap-1 px-4 py-2 rounded-full border border-[var(--color-border)] text-sm font-medium no-underline hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-          >
-            {item.label}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <li role="listitem">
+          <PillChip as="a" href={item.href} size="md" external>
+            <span>{item.label}</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M7 17 17 7M9 7h8v8" />
             </svg>
-          </a>
+          </PillChip>
         </li>
       ))}
     </ul>
   </nav>
 )}
+
+<style>
+  .bp-project-links ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>

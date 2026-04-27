@@ -29,13 +29,40 @@ const ogImage = image
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#6d28d9" />
+    <meta name="theme-color" content="#0b1326" id="bp-theme-color" />
     <meta name="generator" content={Astro.generator} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    {/*
+      Inline pre-hydration theme resolver. Runs synchronously before stylesheet
+      paint to eliminate the "flash of wrong theme" when a visitor has picked a
+      theme that differs from the OS preference. See research.md §2.
+    */}
+    <script is:inline>
+      (function () {
+        try {
+          var KEY = 'bp-theme';
+          var stored = localStorage.getItem(KEY);
+          var osDark =
+            typeof window.matchMedia === 'function' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored === 'light' || stored === 'dark'
+            ? stored
+            : osDark ? 'dark' : 'light';
+          document.documentElement.dataset.theme = theme;
+          var meta = document.getElementById('bp-theme-color');
+          if (meta) {
+            meta.setAttribute('content', theme === 'dark' ? '#0b1326' : '#f2f5fb');
+          }
+        } catch {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
@@ -54,7 +81,7 @@ const ogImage = image
     <meta name="twitter:description" content={description} />
     {ogImage && <meta name="twitter:image" content={ogImage} />}
   </head>
-  <body>
+  <body class="bp-grid-bg">
     <a href="#main" class="skip-link">Skip to main content</a>
     <SiteHeader />
     <main id="main">

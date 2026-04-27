@@ -1,12 +1,15 @@
 ---
 import ProjectCard from './ProjectCard.astro';
 import type { ProjectWithMeta } from '../lib/projects';
+import { withBase } from '../lib/url';
 
 interface Props {
   projects: ProjectWithMeta[];
   emptyMessage?: string;
   heading?: string;
   headingId?: string;
+  viewAllHref?: string;
+  startIndex?: number;
 }
 
 const {
@@ -14,27 +17,114 @@ const {
   emptyMessage = 'No projects to show yet — check back soon.',
   heading,
   headingId = 'projects',
+  viewAllHref,
+  startIndex = 1,
 } = Astro.props;
+
+const viewAllUrl = viewAllHref ? withBase(viewAllHref) : null;
 ---
 
-<section class="container-narrow py-8" aria-labelledby={heading ? headingId : undefined}>
+<section class="bp-project-grid container-narrow" aria-labelledby={heading ? headingId : undefined}>
   {heading && (
-    <h2 id={headingId} class="text-2xl md:text-3xl font-bold mb-6">
-      {heading}
-    </h2>
+    <header class="bp-project-grid__header">
+      <h2 id={headingId} class="bp-project-grid__heading bp-eyebrow">
+        {heading}
+      </h2>
+      {viewAllUrl && (
+        <a class="bp-project-grid__view-all" href={viewAllUrl}>
+          View all projects
+          <span aria-hidden="true">→</span>
+        </a>
+      )}
+    </header>
   )}
 
   {projects.length === 0 ? (
-    <div class="rounded-xl border border-dashed border-[var(--color-border)] p-10 text-center text-[var(--color-text-muted)]">
-      <p class="m-0">{emptyMessage}</p>
+    <div class="bp-project-grid__empty">
+      <p>{emptyMessage}</p>
     </div>
   ) : (
-    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 list-none m-0 p-0">
-      {projects.map((p) => (
-        <li>
-          <ProjectCard project={p} />
+    <ul class="bp-project-grid__list" role="list">
+      {projects.map((p, i) => (
+        <li role="listitem">
+          <ProjectCard project={p} index={startIndex + i} />
         </li>
       ))}
     </ul>
   )}
 </section>
+
+<style>
+  .bp-project-grid {
+    padding: 2rem 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .bp-project-grid {
+      padding: 2.5rem 2rem;
+    }
+  }
+
+  .bp-project-grid__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .bp-project-grid__heading {
+    margin: 0;
+    font-size: var(--text-bp-lg);
+    font-weight: 600;
+    color: var(--bp-accent);
+  }
+
+  .bp-project-grid__view-all {
+    font-family: var(--font-bp-sans);
+    font-size: var(--text-bp-sm);
+    color: var(--bp-text);
+    text-decoration: none;
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  .bp-project-grid__view-all:hover {
+    color: var(--bp-accent);
+  }
+
+  .bp-project-grid__empty {
+    border: 1px dashed var(--bp-line);
+    border-radius: var(--radius-bp-lg);
+    padding: 2.5rem;
+    text-align: center;
+    color: var(--bp-text-mut);
+    background: color-mix(in srgb, var(--bp-surface) 50%, transparent);
+  }
+
+  .bp-project-grid__empty p {
+    margin: 0;
+  }
+
+  .bp-project-grid__list {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (min-width: 768px) {
+    .bp-project-grid__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .bp-project-grid__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

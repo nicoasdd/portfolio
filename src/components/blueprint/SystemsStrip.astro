@@ -1,0 +1,72 @@
+---
+import Icons from './Icons.astro';
+import { getSite } from '../../lib/site';
+
+const { data } = await getSite();
+---
+
+<section class="bp-systems-strip" aria-label="Systems strip">
+  <div class="bp-systems-strip__grid">
+    {data.systemsStrip.map((group) => (
+      <div class="bp-systems-group">
+        <h3 class="bp-systems-group__title">{group.title}</h3>
+        <div class="bp-systems-group__icons" aria-hidden="true">
+          {group.icons.map((icon) => (
+            <Icons name={icon} size={20} />
+          ))}
+        </div>
+        <p class="bp-systems-group__desc">{group.description}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .bp-systems-strip {
+    border-top: 1px dashed var(--bp-line);
+    border-bottom: 1px dashed var(--bp-line);
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+  }
+
+  .bp-systems-strip__grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .bp-systems-strip__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .bp-systems-strip__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .bp-systems-group__title {
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--bp-accent);
+    margin: 0 0 0.5rem;
+  }
+
+  .bp-systems-group__icons {
+    display: flex;
+    gap: 0.75rem;
+    color: var(--bp-text);
+    margin-bottom: 0.5rem;
+  }
+
+  .bp-systems-group__desc {
+    font-size: var(--text-bp-sm);
+    color: var(--bp-text-mut);
+    margin: 0;
+    line-height: 1.5;
+  }
+</style>

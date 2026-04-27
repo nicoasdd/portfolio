@@ -1,0 +1,106 @@
+---
+interface Props {
+  as?: 'span' | 'a' | 'button';
+  href?: string;
+  active?: boolean;
+  size?: 'sm' | 'md';
+  class?: string;
+  ariaLabel?: string;
+  ariaCurrent?: 'page' | 'true' | undefined;
+  external?: boolean;
+}
+
+const {
+  as = 'span',
+  href,
+  active = false,
+  size = 'md',
+  class: className = '',
+  ariaLabel,
+  ariaCurrent,
+  external = false,
+} = Astro.props;
+
+const Tag = as;
+const commonClasses = [
+  'bp-pill-chip',
+  `bp-pill-chip--${size}`,
+  active && 'bp-pill-chip--active',
+  className,
+];
+
+const externalAttrs =
+  external && as === 'a'
+    ? { target: '_blank', rel: 'noopener noreferrer' }
+    : {};
+---
+
+<Tag
+  class:list={commonClasses}
+  href={as === 'a' ? href : undefined}
+  aria-label={ariaLabel}
+  aria-current={ariaCurrent}
+  {...externalAttrs}
+>
+  <slot />
+</Tag>
+
+<style>
+  .bp-pill-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-sm);
+    background-color: transparent;
+    color: var(--bp-text);
+    font-family: var(--font-bp-sans);
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .bp-pill-chip--sm {
+    padding: 0.35rem 0.6rem;
+    font-size: var(--text-bp-xs);
+  }
+
+  .bp-pill-chip--md {
+    padding: 0.55rem 0.85rem;
+    font-size: var(--text-bp-sm);
+  }
+
+  a.bp-pill-chip,
+  button.bp-pill-chip {
+    transition: border-color 150ms ease-out, color 150ms ease-out,
+      background-color 150ms ease-out;
+  }
+
+  a.bp-pill-chip:hover,
+  button.bp-pill-chip:hover {
+    border-color: var(--bp-accent);
+    color: var(--bp-accent);
+  }
+
+  .bp-pill-chip--active {
+    background-color: var(--bp-accent);
+    color: var(--bp-accent-contrast);
+    border-color: var(--bp-accent);
+  }
+
+  a.bp-pill-chip--active:hover,
+  button.bp-pill-chip--active:hover {
+    background-color: var(--bp-accent-hover);
+    border-color: var(--bp-accent-hover);
+    color: var(--bp-accent-contrast);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a.bp-pill-chip,
+    button.bp-pill-chip {
+      transition: none;
+    }
+  }
+</style>

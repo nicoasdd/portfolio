@@ -1,0 +1,56 @@
+---
+import IconChip from './blueprint/IconChip.astro';
+import { getSite } from '../lib/site';
+
+const { data } = await getSite();
+---
+
+<section class="bp-credibility" aria-label="What I bring">
+  <span class="bp-credibility__label">What I bring</span>
+  <ul class="bp-credibility__list" role="list">
+    {data.credibilityStrip.map((item) => (
+      <li role="listitem">
+        <IconChip icon={item.icon} label={item.label} />
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .bp-credibility {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-lg);
+    background: color-mix(in srgb, var(--bp-surface) 70%, transparent);
+  }
+
+  @media (min-width: 768px) {
+    .bp-credibility {
+      flex-direction: row;
+      align-items: center;
+      gap: 1.25rem;
+    }
+  }
+
+  .bp-credibility__label {
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--bp-text-mut);
+    white-space: nowrap;
+  }
+
+  .bp-credibility__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+</style>

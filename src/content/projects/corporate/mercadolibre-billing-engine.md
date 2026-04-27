@@ -21,6 +21,34 @@ techStack:
 thumbnail: "/projects/mercadolibre-billing-engine/thumbnail.svg"
 featured: true
 order: 10
+impactTagline: "Load-tested past 10k TPS"
+highlightMetric:
+  label: "PEAK THROUGHPUT"
+  value: "10k+"
+  trend: "up"
+metrics:
+  - { label: "PEAK THROUGHPUT", value: "10k+", unit: "TPS" }
+  - { label: "ACTIVE OWNERSHIP", value: "~2", unit: "YEARS" }
+  - { label: "MARKETPLACE", value: "LATAM" }
+narrative:
+  challenge:
+    - "Charge every seller, every transaction, every fee across LatAm — zero room for drift."
+    - "Sustain peak load without dropping events."
+    - "Keep billing logic legible while auditing and retry policy ride alongside."
+  built:
+    - "Java 8 + Spring Boot billing core with Apache Pulsar for ordered async flow."
+    - "Polyglot persistence: Oracle/MySQL for transactional core, Cassandra for writes, Redis for hot-path cache."
+    - "Cross-cutting rules (audit, metrics, retry) factored out via AOP."
+  impact:
+    - "Sustained well past 10k TPS under stress tests."
+    - "Shipped through CI/CD from day one — safe production changes at marketplace scale."
+    - "Two years of continuous billing across MercadoLibre's LatAm marketplace."
+architecture:
+  - { label: "SELLERS", icon: "users" }
+  - { label: "PULSAR", icon: "messaging", note: "Topics / consumers" }
+  - { label: "BILLING CORE", icon: "server", note: "Spring Boot + AOP" }
+  - { label: "REDIS", icon: "cache", note: "Hot-path cache" }
+  - { label: "LEDGER DB", icon: "db", note: "Oracle / MySQL / Cassandra" }
 ---
 
 ## Overview

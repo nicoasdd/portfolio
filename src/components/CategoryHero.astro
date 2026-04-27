@@ -1,0 +1,184 @@
+---
+import IsoIllustration from './blueprint/IsoIllustration.astro';
+import { CATEGORY_LABELS, type CategoryKey } from '../content.config';
+import { getSite } from '../lib/site';
+import { withBase } from '../lib/url';
+
+interface Props {
+  category: CategoryKey;
+}
+
+const { category } = Astro.props;
+const label = CATEGORY_LABELS[category];
+
+let mission =
+  category === 'personal'
+    ? 'Self-initiated products and independently shipped systems built, operated, and owned end-to-end.'
+    : category === 'startup'
+      ? 'Founding-team work on early-stage products — fast iteration, scrappy infrastructure, and real users.'
+      : 'Large-scale platforms for established companies, engineered for reliability, compliance, and throughput.';
+
+try {
+  const { data } = await getSite();
+  mission = data.categoryMissions[category] ?? mission;
+} catch {
+  /* use fallback */
+}
+
+const bulletSets: Record<CategoryKey, { kicker: string; bullets: string[] }> = {
+  personal: {
+    kicker: 'INDEPENDENT BUILDER',
+    bullets: ['Idea → Build → Ship', 'Operate + Iterate', 'Own the outcome'],
+  },
+  startup: {
+    kicker: 'FOUNDING ENGINEER',
+    bullets: ['Ship fast, measure', 'Build for real users', 'Keep the team unblocked'],
+  },
+  corporate: {
+    kicker: 'PLATFORM BUILDER',
+    bullets: ['Reliability at scale', 'Security by design', 'Team enablement'],
+  },
+};
+const callout = bulletSets[category];
+---
+
+<section class="bp-cat-hero" aria-labelledby="bp-cat-hero-heading">
+  <div class="bp-cat-hero__inner container-narrow">
+    <div class="bp-cat-hero__text">
+      <nav aria-label="Breadcrumb" class="bp-cat-hero__crumbs">
+        <ol>
+          <li><a href={withBase('/')}>Home</a></li>
+          <li aria-hidden="true"><span>/</span></li>
+          <li aria-current="page">{label}</li>
+        </ol>
+      </nav>
+      <h1 id="bp-cat-hero-heading" class="bp-cat-hero__title">{label} projects</h1>
+      <p class="bp-cat-hero__sub">{mission}</p>
+    </div>
+    <div class="bp-cat-hero__visual" aria-hidden="true">
+      <IsoIllustration variant="category" />
+      <aside class="bp-cat-hero__callout" aria-hidden="true">
+        <p class="bp-cat-hero__callout-kicker">{callout.kicker}</p>
+        <ul>
+          {callout.bullets.map((b) => (
+            <li>
+              <span class="bp-cat-hero__callout-check">✓</span>
+              {b}
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bp-cat-hero {
+    padding: 2.5rem 0 2rem;
+  }
+
+  .bp-cat-hero__inner {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .bp-cat-hero__inner {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+
+  .bp-cat-hero__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0 0 0.75rem;
+    padding: 0;
+    font-size: var(--text-bp-sm);
+    color: var(--bp-text-mut);
+  }
+
+  .bp-cat-hero__crumbs a {
+    color: var(--bp-text-mut);
+    text-decoration: none;
+  }
+
+  .bp-cat-hero__crumbs a:hover {
+    color: var(--bp-accent);
+  }
+
+  .bp-cat-hero__crumbs li[aria-current='page'] {
+    color: var(--bp-accent);
+  }
+
+  .bp-cat-hero__title {
+    font-size: var(--text-bp-hero);
+    line-height: 1.05;
+    margin: 0 0 1rem;
+    letter-spacing: -0.015em;
+  }
+
+  .bp-cat-hero__sub {
+    font-size: var(--text-bp-lg);
+    color: var(--bp-text-mut);
+    max-width: 58ch;
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  .bp-cat-hero__visual {
+    position: relative;
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .bp-cat-hero__visual {
+      display: block;
+    }
+  }
+
+  .bp-cat-hero__callout {
+    position: absolute;
+    right: 0;
+    bottom: 1rem;
+    min-width: 220px;
+    padding: 1rem 1.25rem;
+    background: var(--bp-surface);
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-md);
+    color: var(--bp-text);
+  }
+
+  .bp-cat-hero__callout-kicker {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-bp-mono);
+    font-size: var(--text-bp-xs);
+    letter-spacing: 0.12em;
+    color: var(--bp-accent);
+    text-transform: uppercase;
+  }
+
+  .bp-cat-hero__callout ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .bp-cat-hero__callout li {
+    font-size: var(--text-bp-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .bp-cat-hero__callout-check {
+    color: var(--bp-accent);
+    font-weight: 700;
+  }
+</style>

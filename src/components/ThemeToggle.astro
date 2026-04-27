@@ -1,0 +1,101 @@
+---
+/*
+  Theme toggle — client-side controlled. The initial aria-checked / icon state
+  is set by the inline pre-hydration script in BaseLayout so there's no flash.
+  This component's script only reacts to clicks.
+*/
+---
+
+<button
+  type="button"
+  class="bp-theme-toggle"
+  role="switch"
+  aria-checked="false"
+  aria-label="Toggle color theme"
+  data-theme-toggle
+>
+  <svg class="bp-theme-toggle__icon bp-theme-toggle__icon--dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+    <path d="M21 13a9 9 0 0 1-10.5-10 9 9 0 1 0 10.5 10z" />
+  </svg>
+  <svg class="bp-theme-toggle__icon bp-theme-toggle__icon--light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" />
+  </svg>
+  <span class="sr-only" data-theme-label>Toggle color theme</span>
+</button>
+
+<style>
+  .bp-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--bp-line);
+    border-radius: var(--radius-bp-sm);
+    background: transparent;
+    color: var(--bp-text);
+    cursor: pointer;
+    transition: border-color 150ms ease-out, color 150ms ease-out;
+  }
+
+  .bp-theme-toggle:hover {
+    border-color: var(--bp-accent);
+    color: var(--bp-accent);
+  }
+
+  .bp-theme-toggle__icon {
+    display: none;
+  }
+
+  :global(html[data-theme='dark']) .bp-theme-toggle__icon--light {
+    display: block;
+  }
+
+  :global(html[data-theme='light']) .bp-theme-toggle__icon--dark {
+    display: block;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bp-theme-toggle {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { applyTheme, readCurrentTheme, writeStoredTheme } from '../lib/theme';
+
+  function syncAria(button: HTMLButtonElement, theme: 'dark' | 'light') {
+    button.setAttribute('aria-checked', theme === 'dark' ? 'true' : 'false');
+    const label = button.querySelector<HTMLElement>('[data-theme-label]');
+    if (label) {
+      label.textContent =
+        theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+    }
+  }
+
+  const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  if (button) {
+    syncAria(button, readCurrentTheme());
+    button.addEventListener('click', () => {
+      const current = readCurrentTheme();
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      writeStoredTheme(next);
+      syncAria(button, next);
+    });
+  }
+</script>
